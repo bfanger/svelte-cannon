@@ -1,0 +1,66 @@
+{
+  "name": "svelte-project-template",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "svelte-kit dev",
+    "build": "svelte-kit build",
+    "preview": "svelte-kit preview",
+    "lint": "concurrently --kill-others-on-fail \"yarn:lint:*\"",
+    "lint:prettier": "prettier --check --loglevel=warn \"src/**/*.svelte\"",
+    "lint:svelte-check": "svelte-check --fail-on-warnings --fail-on-hints",
+    "lint:tsc": "tsc --noEmit",
+    "lint:eslint": "eslint --ext=js,ts,svelte --max-warnings=0 src",
+    "format": "prettier --write . && eslint --ext=js,ts,svelte --fix src",
+    "prepare": "husky install"
+  },
+  "prettier": "eslint-config-triple/.prettierrc",
+  "lint-staged": {
+    "*.ts": [
+      "eslint --max-warnings 0 --no-ignore",
+      "sh -c 'tsc -p tsconfig.json --noEmit'"
+    ],
+    "*.(c)?js": [
+      "eslint --max-warnings 0 --no-ignore"
+    ],
+    "*.svelte": [
+      "eslint --max-warnings 0 --no-ignore",
+      "svelte-check --fail-on-warnings --fail-on-hints",
+      "prettier --check"
+    ]
+  },
+  "peerDependencies": {
+    "cannon-es": "*"
+  },
+  "devDependencies": {
+    "@sveltejs/adapter-static": "next",
+    "@sveltejs/kit": "next",
+    "@types/three": "^0.135.0",
+    "@typescript-eslint/eslint-plugin": "^5.8.0",
+    "@typescript-eslint/parser": "^5.8.0",
+    "cannon-es": "^0.18.0",
+    "concurrently": "^6.5.1",
+    "eslint": "^8.5.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-airbnb-typescript": "^16.1.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-config-triple": "^0.0.8",
+    "eslint-import-resolver-typescript": "^2.5.0",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-only-warn": "^1.0.3",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-svelte3": "^3.2.1",
+    "husky": "^7.0.4",
+    "lint-staged": "^12.1.4",
+    "prettier": "^2.4.1",
+    "prettier-plugin-svelte": "^2.5.0",
+    "sass": "^1.45.1",
+    "svelte": "^3.44.2",
+    "svelte-check": "^2.2.10",
+    "svelte-cubed": "^0.2.1",
+    "svelte-preprocess": "^4.9.8",
+    "three": "0.135.0",
+    "typescript": "^4.5.2",
+    "vite": "^2.7.7"
+  }
+}

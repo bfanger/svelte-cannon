@@ -1,0 +1,16 @@
+{
+  "extends": ["triple/svelte"],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.eslint.json",
+    "extraFileExtensions": [".cjs", ".svelte"]
+  },
+  "env": {
+    "browser": true,
+    "jest": true,
+    "node": true
+  },
+  "rules": {
+    "new-cap": "off"
+  }
+}

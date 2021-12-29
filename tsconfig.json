@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "target": "ESNext",
+    "module": "ESNext",
+    "importsNotUsedAsValues": "error",
+    "isolatedModules": true,
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "strict": true,
+    "lib": ["DOM"],
+    "allowJs": true,
+    "noEmit": true,
+    "checkJs": true,
+    "paths": {
+      "$app/*": [".svelte/dev/runtime/app/*", ".svelte/build/runtime/app/*"],
+      "$lib/*": ["src/lib/*"]
+    },
+    "allowSyntheticDefaultImports": true
+  },
+  "typeRoots": ["node_modules/ammojs-typed/ammo/ambient"],
+  "include": ["src/**/*.d.ts", "src/**/*.js", "src/**/*.ts", "src/**/*.svelte"]
+}
