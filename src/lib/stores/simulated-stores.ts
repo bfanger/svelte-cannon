@@ -1,22 +1,23 @@
-import type { Vec3 } from "cannon-es";
+import type { Quaternion, Vec3 } from "cannon-es";
 import type { Readable, Writable } from "svelte/store";
 import { writable } from "svelte/store";
 import { getStepContext } from "$lib/context-fns";
 
-export function fromPosition(instance: { position: Vec3 }, precision = 0.001) {
-  return createVec3Store(instance, "position", precision);
-}
+type Options = {
+  precision?: number;
+  step?: Readable<void>;
+};
 
-export function createVec3Store<T extends string>(
+export function createVec3FromPropStore<T extends string>(
   instance: Record<T, Vec3>,
   property: T,
-  precision: number,
-  step?: Readable<void>
+  options?: Options
 ): Writable<Vec3> {
-  const trigger = step || getStepContext();
+  const step = options?.step || getStepContext();
+  const precision = options?.precision ?? 0.001;
   const value = instance[property].clone();
   const store = writable(value, () => {
-    return trigger.subscribe(() => {
+    return step.subscribe(() => {
       const next = instance[property];
       if (value.almostEquals(next, precision) === false) {
         value.copy(next);
@@ -25,6 +26,41 @@ export function createVec3Store<T extends string>(
     });
   });
   function set(val: Vec3) {
+    value.copy(val);
+    store.set(value);
+  }
+  return {
+    subscribe: store.subscribe,
+    set,
+    update(callback) {
+      set(callback(value));
+    },
+  };
+}
+
+export function createQuaternionStore<T extends string>(
+  instance: Record<T, Quaternion>,
+  property: T,
+  options?: Options
+): Writable<Quaternion> {
+  const step = options?.step || getStepContext();
+  const precision = options?.precision ?? 0.001;
+  const value = instance[property].clone();
+  const store = writable(value, () => {
+    return step.subscribe(() => {
+      const next = instance[property];
+      if (
+        Math.abs(value.x - next.x) > precision ||
+        Math.abs(value.y - next.y) > precision ||
+        Math.abs(value.z - next.z) > precision ||
+        Math.abs(value.w - next.w) > precision
+      ) {
+        value.copy(next);
+        store.set(value);
+      }
+    });
+  });
+  function set(val: Quaternion) {
     value.copy(val);
     store.set(value);
   }

@@ -1,48 +1,50 @@
-# Svelte Project Template
+# Svelte Cannon
 
-[Svelte](https://svelte.dev/) project preconfigured with:
+Declarative API using [Svelte](https://svelte.dev/) components
 
-- [SvelteKit](https://kit.svelte.dev/) ([Vite](https://vitejs.dev))
-- [Typescript](http://typescriptlang.org)
-- [Sass](https://sass-lang.com)
-- [Prettier](https://prettier.io) & [Eslint](https://eslint.org)
-- [Husky](https://typicode.github.io/husky/) & [Lint-staged](https://github.com/okonet/lint-staged)
-- [Jest](https://jestjs.io) \*1
-- [Storybook](https://storybook.js.org/docs/6.4/svelte/writing-stories/introduction) \*1
+## Usage
 
-\*1: To keep the installation speedy Jest and Storybook are disabled by default.
+```svelte
+<script lang="ts">
+  import * as THREE from "three";
+  import * as SC from "svelte-cubed";
+  import * as PE from "svelte-cannon";
+  import * as CANNON from "cannon-es";
+</script>
 
-## Initial setup
-
-```sh
-npx degit "github.com/bfanger/svelte-project-template#main" my-svelte-project
-cd my-svelte-project
-git init && git add .
-yarn             # or  npm install
-yarn dev --open  # or  npm run dev
+<PE.World gravity={[0, -9.81, 0]}>
+<PE.Body
+      mass={5}
+      position={[0, 5, 0]}
+      let:position
+    >
+      <PE.Box size={[0.5, 0.5, 0.5]} />
+      <SC.Mesh
+        position={[position.x, position.y, position.z]}
+        rotation={toEuler(quaternion)}
+        geometry={new THREE.BoxGeometry()}
+        material={new THREE.MeshPhongMaterial({ color: 0x999999 })}
+        castShadow
+      />
 ```
 
-## Enabling Testing & Storybook
+## Contributing
+
+### Setup
 
 ```sh
-node ./enable-testing.js
-yarn  # or  npm install
+yarn install
+yarn dev
 ```
 
-- Creates the configuration files
-- Creates an example unittest
-- Creates an example storybook story
-- Installs ~734 additional modules
-
-## Linting
+### Linting
 
 ```sh
 yarn lint  # or  npm run lint
 ```
 
-## Build
+### Build
 
 ```sh
 yarn build  # or  npm run build
-npx serve -s build
 ```

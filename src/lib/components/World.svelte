@@ -1,13 +1,17 @@
 <script lang="ts">
-  import { World, Vec3 } from "cannon-es";
+  import { createVec3FromProp, updateVec3FromProp } from "$lib/prop-fns";
+
+  import type { Vec3Prop } from "$lib/types";
+
+  import { World } from "cannon-es";
   import { setContext } from "svelte";
   import { derived } from "svelte/store";
   import raf from "../stores/raf";
 
-  export let gravity = new Vec3();
+  export let gravity: Vec3Prop | undefined = undefined;
 
-  const world = new World({ gravity });
-  $: world.gravity.copy(gravity);
+  const world = new World({ gravity: createVec3FromProp(gravity) });
+  $: updateVec3FromProp(world.gravity, gravity);
 
   let prev: number;
   const timeStep = 1 / 60;

@@ -5,6 +5,11 @@
   import * as CANNON from "cannon-es";
 
   const distance = 20;
+  function toEuler(q: CANNON.Quaternion): [number, number, number] {
+    const euler = new CANNON.Vec3();
+    q.toEuler(euler); // YZX
+    return [euler.x, euler.y, euler.z];
+  }
 </script>
 
 <svelte:head>
@@ -30,21 +35,28 @@
       mapSize: [2048, 2048],
     }}
   />
-  <PE.World gravity={new CANNON.Vec3(0, -9.81, 0)}>
-    <PE.Body euler={new CANNON.Vec3(-Math.PI / 2, 0, 0)}>
+  <PE.World gravity={[0, -9.81, 0]}>
+    <PE.Body euler={[-Math.PI / 2, 0, 0]} let:quaternion>
       <PE.Plane />
       <SC.Mesh
         geometry={new THREE.PlaneBufferGeometry(100, 100, 1, 1)}
-        rotation={[-Math.PI / 2, 0, 0]}
+        rotation={toEuler(quaternion)}
         material={new THREE.MeshLambertMaterial({ color: 0x777777 })}
         receiveShadow
       />
     </PE.Body>
 
-    <PE.Body mass={5} position={new CANNON.Vec3(0, 5, 0)} let:position>
-      <PE.Box size={new CANNON.Vec3(0.5, 0.5, 0.5)} />
+    <PE.Body
+      mass={5}
+      position={[0, 5, 0]}
+      euler={[1, 0, 1]}
+      let:position
+      let:quaternion
+    >
+      <PE.Box size={[0.5, 0.5, 0.5]} />
       <SC.Mesh
         position={[position.x, position.y, position.z]}
+        rotation={toEuler(quaternion)}
         geometry={new THREE.BoxGeometry()}
         material={new THREE.MeshPhongMaterial({ color: 0x999999 })}
         castShadow

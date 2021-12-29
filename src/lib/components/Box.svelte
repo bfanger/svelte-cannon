@@ -1,12 +1,15 @@
 <script lang="ts">
+  import { createVec3FromProp, updateVec3FromProp } from "$lib/prop-fns";
+
+  import type { Vec3Prop } from "$lib/types";
+
   import { Box } from "cannon-es";
-  import type { Vec3 } from "math/Vec3";
   import Shape from "./Shape.svelte";
 
-  export let size: Vec3;
-  const shape = new Box(size);
+  export let size: Vec3Prop;
+  const shape = new Box(createVec3FromProp(size));
 
-  $: shape.halfExtents.copy(size);
+  $: updateVec3FromProp(shape.halfExtents, size);
 </script>
 
 <Shape {shape}>
