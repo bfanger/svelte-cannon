@@ -1,11 +1,14 @@
 {
-  "name": "svelte-project-template",
-  "private": true,
+  "name": "svelte-cannon",
+  "description": "Declarative svelte components for the cannon-es physics engine",
+  "version": "0.0.1",
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "dev": "svelte-kit dev",
     "build": "svelte-kit build",
     "preview": "svelte-kit preview",
+    "package": "svelte-kit package",
     "lint": "concurrently --kill-others-on-fail \"yarn:lint:*\"",
     "lint:prettier": "prettier --check --loglevel=warn \"src/**/*.svelte\"",
     "lint:svelte-check": "svelte-check --fail-on-warnings --fail-on-hints",
@@ -59,6 +62,7 @@
     "svelte-check": "^2.2.10",
     "svelte-cubed": "^0.2.1",
     "svelte-preprocess": "^4.9.8",
+    "svelte2tsx": "^0.4.12",
     "three": "0.135.0",
     "typescript": "^4.5.2",
     "vite": "^2.7.7"

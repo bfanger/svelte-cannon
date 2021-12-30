@@ -1,12 +1,10 @@
 <script lang="ts">
-  import { createVec3FromProp, updateVec3FromProp } from "$lib/prop-fns";
-
-  import type { Vec3Prop } from "$lib/types";
-
   import { World } from "cannon-es";
   import { setContext } from "svelte";
   import { derived } from "svelte/store";
+  import { createVec3FromProp, updateVec3FromProp } from "../prop-fns";
   import raf from "../stores/raf";
+  import type { Vec3Prop } from "../types";
 
   export let gravity: Vec3Prop | undefined = undefined;
 

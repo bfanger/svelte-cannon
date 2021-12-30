@@ -1,20 +1,17 @@
-import type { Quaternion, Vec3 } from "cannon-es";
+import { Quaternion, Vec3 } from "cannon-es";
+import { derived, writable } from "svelte/store";
 import type { Readable, Writable } from "svelte/store";
-import { writable } from "svelte/store";
-import { getStepContext } from "$lib/context-fns";
 
 type Options = {
-  precision?: number;
-  step?: Readable<void>;
+  precision: number;
+  step: Readable<void>;
 };
 
 export function createVec3FromPropStore<T extends string>(
   instance: Record<T, Vec3>,
   property: T,
-  options?: Options
+  { step, precision }: Options
 ): Writable<Vec3> {
-  const step = options?.step || getStepContext();
-  const precision = options?.precision ?? 0.001;
   const value = instance[property].clone();
   const store = writable(value, () => {
     return step.subscribe(() => {
@@ -41,10 +38,8 @@ export function createVec3FromPropStore<T extends string>(
 export function createQuaternionStore<T extends string>(
   instance: Record<T, Quaternion>,
   property: T,
-  options?: Options
+  { step, precision }: Options
 ): Writable<Quaternion> {
-  const step = options?.step || getStepContext();
-  const precision = options?.precision ?? 0.001;
   const value = instance[property].clone();
   const store = writable(value, () => {
     return step.subscribe(() => {
@@ -71,4 +66,14 @@ export function createQuaternionStore<T extends string>(
       set(callback(value));
     },
   };
+}
+
+export function derivedEulerStore(
+  quaternion: Readable<Quaternion>
+): Readable<Vec3> {
+  const value = new Vec3();
+  return derived(quaternion, ($quaternion) => {
+    $quaternion.toEuler(value);
+    return value;
+  });
 }

@@ -1,39 +1,47 @@
 <script lang="ts">
   import { Body, Quaternion } from "cannon-es";
   import { onMount, setContext } from "svelte";
-  import { getWorldContext } from "../context-fns";
+  import { getStepContext, getWorldContext } from "../context-fns";
   import {
     createVec3FromPropStore,
     createQuaternionStore,
-  } from "$lib/stores/simulated-stores";
-  import type { Vec3Prop } from "$lib/types";
-  import { createVec3FromProp, updateVec3FromProp } from "$lib/prop-fns";
+    derivedEulerStore,
+  } from "../store-fns";
+  import type { Vec3Prop } from "../types";
+  import {
+    createVec3FromProp,
+    updateVec3FromProp,
+    updateFromEulerProp,
+  } from "../prop-fns";
 
   const world = getWorldContext();
+  const step = getStepContext();
 
   export let mass = 0;
   export let position: Vec3Prop | undefined = undefined;
+  export let positionPrecision = 0.001;
+  export let rotation: Vec3Prop | undefined = undefined;
+  export let rotationPrecision = 0.001;
   export let quaternion: Quaternion | undefined = undefined;
-  export let euler: Vec3Prop | undefined = undefined;
 
   const body = new Body({ mass, position: createVec3FromProp(position) });
   setContext("cannon/body", body);
 
   $: body.mass = mass;
   $: updateVec3FromProp(body.position, position);
-  $: euler && updateEuler(euler);
+  $: updateFromEulerProp(body.quaternion, rotation);
 
-  const positionStore = createVec3FromPropStore(body, "position");
+  const positionStore = createVec3FromPropStore(body, "position", {
+    step,
+    precision: positionPrecision,
+  });
   $: quaternion && body.quaternion.copy(quaternion);
-  const quaternionStore = createQuaternionStore(body, "quaternion");
+  const quaternionStore = createQuaternionStore(body, "quaternion", {
+    step,
+    precision: rotationPrecision,
+  });
+  const rotationStore = derivedEulerStore(quaternionStore);
 
-  function updateEuler(next: Vec3Prop) {
-    if (Array.isArray(next)) {
-      body.quaternion.setFromEuler(next[0], next[1], next[2], "YXZ");
-    } else {
-      body.quaternion.setFromEuler(next.x, next.y, next.z, "YXZ");
-    }
-  }
   onMount(() => {
     world.addBody(body);
     return () => {
@@ -42,4 +50,9 @@
   });
 </script>
 
-<slot {body} position={$positionStore} quaternion={$quaternionStore} />
+<slot
+  {body}
+  position={$positionStore}
+  rotation={$rotationStore}
+  quaternion={$quaternionStore}
+/>
