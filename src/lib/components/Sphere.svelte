@@ -1,8 +1,10 @@
 <script lang="ts">
-  import { Sphere } from "cannon-es";
+  import { Quaternion, Sphere, Vec3 } from "cannon-es";
   import Shape from "./Shape.svelte";
 
   export let radius: number;
+  export let offset: Vec3 | undefined = undefined;
+  export let orientation: Quaternion | undefined = undefined;
 
   const shape = new Sphere(radius);
 
@@ -12,6 +14,6 @@
   }
 </script>
 
-<Shape {shape}>
+<Shape {shape} {offset} {orientation}>
   <slot />
 </Shape>

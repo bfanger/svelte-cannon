@@ -4,8 +4,8 @@
   import * as PE from "$lib/index";
 </script>
 
-<SC.Canvas>
-  <PE.World gravity={[0, -9.81, 0]}>
+<PE.World gravity={[0, -9.81, 0]}>
+  <SC.Canvas>
     <SC.PerspectiveCamera position={[0, 2, 10]} />
     <PE.Body mass={1} position={[0, 5, 0]} let:position let:rotation>
       <PE.Sphere radius={1} />
@@ -15,5 +15,5 @@
         geometry={new THREE.SphereGeometry(1)}
       />
     </PE.Body>
-  </PE.World>
-</SC.Canvas>
+  </SC.Canvas>
+</PE.World>

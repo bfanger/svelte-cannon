@@ -1,20 +1,30 @@
-import { Quaternion, Vec3 } from "cannon-es";
-import { derived, writable } from "svelte/store";
+import { Quaternion, Vec3, EventTarget } from "cannon-es";
+import { derived, writable, readable } from "svelte/store";
 import type { Readable, Writable } from "svelte/store";
+
+export function fromEvent(emitter: EventTarget, event: string): Readable<any> {
+  return readable<void>(undefined, (set) => {
+    function listener(e: any) {
+      set(e);
+    }
+    emitter.addEventListener(event, listener);
+    return () => emitter.removeEventListener(event, listener);
+  });
+}
 
 type Options = {
   precision: number;
-  step: Readable<void>;
+  postStep: Readable<void>;
 };
 
 export function createVec3FromPropStore<T extends string>(
   instance: Record<T, Vec3>,
   property: T,
-  { step, precision }: Options
+  { postStep, precision }: Options
 ): Writable<Vec3> {
   const value = instance[property].clone();
   const store = writable(value, () => {
-    return step.subscribe(() => {
+    return postStep.subscribe(() => {
       const next = instance[property];
       if (value.almostEquals(next, precision) === false) {
         value.copy(next);
@@ -38,11 +48,11 @@ export function createVec3FromPropStore<T extends string>(
 export function createQuaternionStore<T extends string>(
   instance: Record<T, Quaternion>,
   property: T,
-  { step, precision }: Options
+  { postStep, precision }: Options
 ): Writable<Quaternion> {
   const value = instance[property].clone();
   const store = writable(value, () => {
-    return step.subscribe(() => {
+    return postStep.subscribe(() => {
       const next = instance[property];
       if (
         Math.abs(value.x - next.x) > precision ||

@@ -8,28 +8,42 @@
 
 <svelte:head>
   <title>Falling dice</title>
-</svelte:head>
-
-<SC.Canvas fog={new THREE.Fog(0x000000, 500, 1000)} shadows>
-  <SC.PerspectiveCamera position={[0, 2, 10]} />
-  <SC.OrbitControls enableZoom={false} />
-  <SC.AmbientLight color={0x666666} />
-  <SC.DirectionalLight
-    position={[-distance, distance, distance]}
-    intensity={1.2}
-    shadow={{
-      camera: {
-        left: -distance,
-        right: distance,
-        top: distance,
-        bottom: -distance,
-        far: 3 * distance,
-        near: distance,
-      },
-      mapSize: [2048, 2048],
-    }}
+  <meta
+    name="description"
+    content="Declarative implementation of https://pmndrs.github.io/cannon-es/examples/threejs_mousepick"
   />
-  <PE.World gravity={[0, -9.81, 0]}>
+</svelte:head>
+<PE.World gravity={[0, -9.81, 0]}>
+  <SC.Canvas
+    fog={new THREE.Fog(0x000000, 500, 1000)}
+    shadows={THREE.PCFSoftShadowMap}
+    outputEncoding={THREE.sRGBEncoding}
+    antialias
+  >
+    <SC.PerspectiveCamera
+      position={[0, 2, 10]}
+      fov={30}
+      near={0.5}
+      far={1000}
+      target={[0, 2, 0]}
+    />
+    <SC.AmbientLight color={0x666666} />
+    <SC.DirectionalLight
+      position={[-distance, distance, distance]}
+      intensity={1.2}
+      shadow={{
+        camera: {
+          left: -distance,
+          right: distance,
+          top: distance,
+          bottom: -distance,
+          far: 3 * distance,
+          near: distance,
+        },
+        mapSize: [2048, 2048],
+      }}
+    />
+
     <PE.Body rotation={[-Math.PI / 2, 0, 0]} let:rotation>
       <PE.Plane />
       <SC.Mesh
@@ -40,13 +54,7 @@
       />
     </PE.Body>
 
-    <PE.Body
-      mass={5}
-      position={[0, 5, 0]}
-      rotation={[1, 0, 1]}
-      let:position
-      let:rotation
-    >
+    <PE.Body mass={5} position={[0, 5, 0]} let:position let:rotation>
       <PE.Box size={[0.5, 0.5, 0.5]} />
       <SC.Mesh
         position={[position.x, position.y, position.z]}
@@ -56,5 +64,5 @@
         castShadow
       />
     </PE.Body>
-  </PE.World>
-</SC.Canvas>
+  </SC.Canvas>
+</PE.World>

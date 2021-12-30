@@ -6,28 +6,28 @@ export function getWorldContext() {
   const world = getContext<World>("cannon/world");
   if (!world) {
     throw new Error(
-      "Missing context, must be nested inside a <World> component"
+      "Missing world context, must be nested inside a <World> component"
     );
   }
   return world;
 }
 
-export function getStepContext() {
-  const step = getContext<Readable<void>>("cannon/step");
-  if (!step) {
+export function getPostStepContext() {
+  const context = getContext<Readable<void>>("cannon/postStep");
+  if (!context) {
     throw new Error(
-      "Missing context, must be nested inside a <World> component"
+      "Missing postStep context, must be nested inside a <World> component"
     );
   }
-  return step;
+  return context;
 }
 
 export function getBodyContext() {
-  const body = getContext<Body>("cannon/body");
-  if (!body) {
+  const context = getContext<Body>("cannon/body");
+  if (!context) {
     throw new Error(
-      "Missing context, must be nested inside a <Body> component"
+      "Missing body context, must be nested inside a <Body> component"
     );
   }
-  return body;
+  return context;
 }

@@ -10,7 +10,7 @@ This example uses [svelte-cubed](https://svelte-cubed.vercel.app/) to display th
 <script lang="ts">
   import * as THREE from "three";
   import * as SC from "svelte-cubed";
-  import * as PE from "svelte-cannon";
+  import * as PE from "svelte-cannon"; // PE is short for Physics Engine
 </script>
 
 <SC.Canvas>
