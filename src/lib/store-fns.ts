@@ -1,89 +1,26 @@
-import { Quaternion, Vec3, EventTarget } from "cannon-es";
-import { derived, writable, readable } from "svelte/store";
-import type { Readable, Writable } from "svelte/store";
+import { Vec3 } from "cannon-es";
+import { writable } from "svelte/store";
+import type { Writable } from "svelte/store";
+import type { Vec3Like } from "./types";
 
-export function fromEvent(emitter: EventTarget, event: string): Readable<any> {
-  return readable<void>(undefined, (set) => {
-    function listener(e: any) {
-      set(e);
-    }
-    emitter.addEventListener(event, listener);
-    return () => emitter.removeEventListener(event, listener);
-  });
-}
-
-type Options = {
-  precision: number;
-  postStep: Readable<void>;
-};
-
-export function createVec3FromPropStore<T extends string>(
-  instance: Record<T, Vec3>,
-  property: T,
-  { postStep, precision }: Options
+export function writableVec3(): Writable<Vec3>;
+export function writableVec3(vec3: Vec3Like): Writable<Vec3>;
+export function writableVec3(x: number, y: number, z: number): Writable<Vec3>;
+export function writableVec3(
+  x?: Vec3Like | number,
+  y?: number,
+  z?: number
 ): Writable<Vec3> {
-  const value = instance[property].clone();
-  const store = writable(value, () => {
-    return postStep.subscribe(() => {
-      const next = instance[property];
-      if (value.almostEquals(next, precision) === false) {
-        value.copy(next);
-        store.set(value);
-      }
-    });
-  });
-  function set(val: Vec3) {
-    value.copy(val);
-    store.set(value);
+  if (arguments.length === 3) {
+    return writable(new Vec3(x as number, y, z));
   }
-  return {
-    subscribe: store.subscribe,
-    set,
-    update(callback) {
-      set(callback(value));
-    },
-  };
-}
-
-export function createQuaternionStore<T extends string>(
-  instance: Record<T, Quaternion>,
-  property: T,
-  { postStep, precision }: Options
-): Writable<Quaternion> {
-  const value = instance[property].clone();
-  const store = writable(value, () => {
-    return postStep.subscribe(() => {
-      const next = instance[property];
-      if (
-        Math.abs(value.x - next.x) > precision ||
-        Math.abs(value.y - next.y) > precision ||
-        Math.abs(value.z - next.z) > precision ||
-        Math.abs(value.w - next.w) > precision
-      ) {
-        value.copy(next);
-        store.set(value);
-      }
-    });
-  });
-  function set(val: Quaternion) {
-    value.copy(val);
-    store.set(value);
+  const vec3 = new Vec3();
+  if (arguments.length === 1) {
+    if (Array.isArray(x)) {
+      vec3.set(x[0], x[1], x[2]);
+    } else {
+      vec3.copy(x as unknown as Vec3);
+    }
   }
-  return {
-    subscribe: store.subscribe,
-    set,
-    update(callback) {
-      set(callback(value));
-    },
-  };
-}
-
-export function derivedEulerStore(
-  quaternion: Readable<Quaternion>
-): Readable<Vec3> {
-  const value = new Vec3();
-  return derived(quaternion, ($quaternion) => {
-    $quaternion.toEuler(value);
-    return value;
-  });
+  return writable(vec3);
 }

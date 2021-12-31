@@ -1,3 +1,3 @@
-import type { Vec3 } from "cannon-es";
-
-export type Vec3Prop = [number, number, number] | Vec3;
+export type Vec3Like =
+  | { x: number; y: number; z: number }
+  | [number, number, number];

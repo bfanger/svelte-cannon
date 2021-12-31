@@ -1,19 +1,21 @@
 <script lang="ts">
   import * as THREE from "three";
   import * as SC from "svelte-cubed";
-  import * as PE from "$lib/index";
+  import * as PE from "$lib/index"; // PE is short for Physics Engine
+
+  const position = PE.writableVec3(0, 4, 0);
 </script>
 
 <PE.World gravity={[0, -9.81, 0]}>
-  <SC.Canvas>
-    <SC.PerspectiveCamera position={[0, 2, 10]} />
-    <PE.Body mass={1} position={[0, 5, 0]} let:position let:rotation>
-      <PE.Sphere radius={1} />
-      <SC.Mesh
-        position={[position.x, position.y, position.z]}
-        rotation={[rotation.x, rotation.y, rotation.z]}
-        geometry={new THREE.SphereGeometry(1)}
-      />
-    </PE.Body>
-  </SC.Canvas>
+  <PE.Body mass={1} {position}>
+    <PE.Sphere radius={1} />
+  </PE.Body>
 </PE.World>
+
+<SC.Canvas>
+  <SC.PerspectiveCamera position={[0, 2, 10]} />
+  <SC.Mesh
+    position={$position.toArray()}
+    geometry={new THREE.SphereGeometry(1)}
+  />
+</SC.Canvas>

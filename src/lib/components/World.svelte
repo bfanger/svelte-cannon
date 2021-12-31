@@ -1,19 +1,16 @@
 <script lang="ts">
   import { World } from "cannon-es";
   import { onMount, setContext } from "svelte";
-  import { createVec3FromProp, updateVec3FromProp } from "../prop-fns";
-  import { fromEvent } from "../store-fns";
+  import { vec3FromProp, syncVec3FromProp } from "../prop-fns";
   import raf from "../stores/raf";
-  import type { Vec3Prop } from "../types";
+  import type { Vec3Like } from "../types";
 
-  export let gravity: Vec3Prop | undefined = undefined;
-  export const world = new World({ gravity: createVec3FromProp(gravity) });
-  const postStep = fromEvent(world, "postStep");
+  export let gravity: Vec3Like | undefined = undefined;
+  export const world = new World({ gravity: vec3FromProp(gravity) });
 
   setContext("cannon/world", world);
-  setContext("cannon/postStep", postStep);
 
-  $: updateVec3FromProp(world.gravity, gravity);
+  $: syncVec3FromProp(world.gravity, gravity);
 
   onMount(() => {
     let prev: number;
@@ -30,4 +27,4 @@
   });
 </script>
 
-<slot {world} />
+<slot />
