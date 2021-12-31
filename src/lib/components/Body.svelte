@@ -1,8 +1,12 @@
 <script lang="ts">
-  import { Body, Shape, Vec3 } from "cannon-es";
-  import { onMount, setContext, tick } from "svelte";
-  import { getWorldContext } from "../context-fns";
-  import type { Vec3Like } from "../types";
+  /**
+   * https://pmndrs.github.io/cannon-es/docs/classes/Body.html
+   */
+  import { Body, Vec3 } from "cannon-es";
+  import { onMount } from "svelte";
+  import { getCannonContext, setCannonContext } from "../context-fns";
+  import type { ConnectablePropVec3 } from "../types";
+  import { onPostStep } from "../lifecycle-fns";
   import {
     vec3FromProp,
     syncVec3FromProp,
@@ -10,102 +14,59 @@
     syncQuaternionEulerProp,
     isWritable,
   } from "../prop-fns";
-  import pairwise from "../stores/pairwise";
-  import type { Writable } from "svelte/store";
-
-  const world = getWorldContext();
 
   export let mass: number | undefined = undefined;
-  export let position: Writable<Vec3> | Vec3Like | undefined = undefined;
-  export let positionPrecision = 0.0001;
-  export let rotation: Writable<Vec3> | Vec3Like | undefined = undefined;
-  export let rotationPrecision = 0.0001;
-  export let shape: Shape | undefined = undefined;
+  export let position: ConnectablePropVec3 = undefined;
+  export let rotation: ConnectablePropVec3 = undefined;
+  export let velocity: ConnectablePropVec3 = undefined;
 
   export const body = new Body({
     mass,
     position: vec3FromProp(position),
     quaternion: quaternionEulerProp(rotation),
+    velocity: vec3FromProp(velocity),
   });
-  setContext("cannon/body", body);
+  const context = getCannonContext();
+  setCannonContext({ ...context, body });
 
   $: if (typeof mass !== "undefined") {
     body.mass = mass;
   }
-  $: positionStore = isWritable(position) ? position : undefined;
   $: syncVec3FromProp(body.position, position);
-  $: syncStore(body.position, positionStore);
-  $: rotationStore = isWritable(rotation) ? rotation : undefined;
+  $: positionStore = isWritable(position) ? position : undefined;
+  $: if (positionStore) {
+    positionStore.onSet = (v) => body.position.copy(v);
+  }
+
   $: syncQuaternionEulerProp(body.quaternion, rotation);
+  $: rotationStore = isWritable(rotation) ? rotation : undefined;
+  $: if (rotationStore) {
+    rotationStore.onSet = (v) => body.position.copy(v);
+  }
 
-  const shapeChange = pairwise((next, prev) => {
-    if (next === prev) {
-      if (next) {
-        body.addShape(next);
-      }
-      return;
-    }
-    if (prev) {
-      body.removeShape(prev);
-    }
-    if (next) {
-      body.addShape(next);
-    }
-  }, shape);
-  $: $shapeChange = shape;
-
-  let updating = true;
-  const subscriptions = new Map<any, () => void>();
-  function syncStore<T extends { copy(v: T): T }>(
-    target: T,
-    store: Writable<T> | undefined
-  ) {
-    const unsub = subscriptions.get(target);
-    if (unsub) {
-      unsub();
-      subscriptions.delete(target);
-    }
-    if (store) {
-      subscriptions.set(
-        target,
-        store.subscribe((value) => {
-          if (updating || !value) {
-            return;
-          }
-          target.copy(value);
-        })
-      );
-    }
+  $: syncVec3FromProp(body.velocity, velocity);
+  $: velocityStore = isWritable(velocity) ? velocity : undefined;
+  $: if (velocityStore) {
+    velocityStore.onSet = (v) => body.velocity.copy(v);
   }
 
   const euler = new Vec3();
-  function onPostStep() {
-    updating = true;
-    if (
-      positionStore &&
-      $positionStore?.almostEquals(body.position, positionPrecision) === false
-    ) {
-      positionStore.set($positionStore.copy(body.position));
-    }
-    if (rotationStore && $rotationStore) {
-      body.quaternion.toEuler(euler, "YZX");
-      if ($rotationStore.almostEquals(euler, rotationPrecision) === false) {
-        rotationStore.set($rotationStore.copy(euler));
-      }
-    }
-    tick().then(() => {
-      updating = false;
-    });
-  }
 
   onMount(() => {
-    world.addBody(body);
-    world.addEventListener("postStep", onPostStep);
-    return () => {
-      subscriptions.forEach((unsubscribe) => unsubscribe());
-      world.removeEventListener("postStep", onPostStep);
-      world.removeBody(body);
-    };
+    context.addBody(body);
+    return () => context.removeBody(body);
+  });
+  onPostStep(() => {
+    if (positionStore) {
+      positionStore.onStep(body.position);
+    }
+    if (rotationStore) {
+      body.quaternion.toEuler(euler, "YZX");
+      rotationStore.onStep(euler);
+    }
+    if (velocityStore) {
+      velocityStore.onStep(body.velocity);
+    }
   });
 </script>
 

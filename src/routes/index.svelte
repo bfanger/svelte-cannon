@@ -6,11 +6,12 @@
 
   const distance = 20;
   const boxPosition = writableVec3(0, 5, 0);
-  const boxRotation = writableVec3();
+  const boxRotation = writableVec3(0, 0, 0);
+  const boxVelocity = writableVec3();
+
   setTimeout(() => {
-    $boxPosition.x = -1;
-    $boxPosition.y = 3;
-  }, 1000);
+    $boxVelocity.y = 6;
+  }, 2000);
 </script>
 
 <svelte:head>
@@ -24,7 +25,12 @@
   <PE.Body mass={0} rotation={[-Math.PI / 2, 0, 0]}>
     <PE.Plane />
   </PE.Body>
-  <PE.Body mass={5} position={boxPosition} rotation={boxRotation}>
+  <PE.Body
+    mass={5}
+    position={boxPosition}
+    rotation={boxRotation}
+    velocity={boxVelocity}
+  >
     <PE.Box size={[0.5, 0.5, 0.5]} />
   </PE.Body>
 </PE.World>
