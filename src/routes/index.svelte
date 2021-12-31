@@ -8,9 +8,15 @@
   const boxPosition = writableVec3(0, 5, 0);
   const boxRotation = writableVec3(0, 0, 0);
   const boxVelocity = writableVec3();
+  let color = 0x999999;
+
+  function onCollide() {
+    color = 0x5555ff;
+  }
 
   setTimeout(() => {
     $boxVelocity.y = 6;
+    color = 0xff5555;
   }, 2000);
 </script>
 
@@ -30,6 +36,7 @@
     position={boxPosition}
     rotation={boxRotation}
     velocity={boxVelocity}
+    on:collide={onCollide}
   >
     <PE.Box size={[0.5, 0.5, 0.5]} />
   </PE.Body>
@@ -77,7 +84,7 @@
     position={$boxPosition.toArray()}
     rotation={$boxRotation.toArray()}
     geometry={new THREE.BoxGeometry()}
-    material={new THREE.MeshPhongMaterial({ color: 0x999999 })}
+    material={new THREE.MeshPhongMaterial({ color })}
     castShadow
   />
   {#if false}

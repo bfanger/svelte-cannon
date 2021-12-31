@@ -2,6 +2,7 @@
   import { World, Body } from "cannon-es";
   import { onMount, setContext } from "svelte";
   import { setCannonContext } from "../context-fns";
+  import { forwardEvents } from "../lifecycle-fns";
   import { vec3FromProp, syncVec3FromProp } from "../prop-fns";
   import type { Vec3Like } from "../types";
 
@@ -22,6 +23,8 @@
   $: syncVec3FromProp(world.gravity, gravity);
 
   const timeStep = 1 / 60;
+  forwardEvents(world, "addBody", "removeBody", "preStep", "postStep");
+
   onMount(() => {
     let raf: number;
     let prev: number;

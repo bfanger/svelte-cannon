@@ -6,7 +6,7 @@
   import { onMount } from "svelte";
   import { getCannonContext, setCannonContext } from "../context-fns";
   import type { ConnectablePropVec3 } from "../types";
-  import { onPostStep } from "../lifecycle-fns";
+  import { forwardEvents, onPostStep } from "../lifecycle-fns";
   import {
     vec3FromProp,
     syncVec3FromProp,
@@ -26,6 +26,7 @@
     quaternion: quaternionEulerProp(rotation),
     velocity: vec3FromProp(velocity),
   });
+
   const context = getCannonContext();
   setCannonContext({ ...context, body });
 
@@ -50,12 +51,15 @@
     velocityStore.onSet = (v) => body.velocity.copy(v);
   }
 
-  const euler = new Vec3();
+  forwardEvents(body, "wakeup", "sleepy", "sleep", "collide");
 
   onMount(() => {
     context.addBody(body);
-    return () => context.removeBody(body);
+    return () => {
+      context.removeBody(body);
+    };
   });
+  const euler = new Vec3();
   onPostStep(() => {
     if (positionStore) {
       positionStore.onStep(body.position);
