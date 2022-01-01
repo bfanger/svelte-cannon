@@ -59,7 +59,16 @@ This approach allows svelte-cannon to:
 - Detect the change direction:
   - Setting the value updates the state of physics engine
   - After the physics calculation, updates the value
-- Use short notations `position={[0, 1, 0]}` for writeonly state
+- Use short notations `position={[0, 1, 0]}` for writeonly props
+- Accept multiple notations for _setting_ the value:
+
+  - `position.set(1, 2, 3)`
+  - `position.set(new CANNON.Vec3(1, 2, 3))`
+  - `$position = new CANNON.Vec3(1, 2, 3)`
+  - `$position = new THREE.Vector3(1, 2, 3)`
+  - `$position = {x: 1, y: 2, z: 3}`
+  - `$position = [1, 2, 3]`
+  - `$position.x = 1; $position.x = 2; $position.x = 3;`
 
 ## Contributing
 

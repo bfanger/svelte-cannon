@@ -1,9 +1,12 @@
 import { Vec3 } from "cannon-es";
-import { get, writable } from "svelte/store";
-import type { Writable } from "svelte/store";
+import { writable } from "svelte/store";
 import type { ConnectableStore, Vec3Like } from "./types";
 
-type Vec3Writable = ConnectableStore<Vec3> & { precision: number };
+type Vec3Writable = ConnectableStore<Vec3> & {
+  precision: number;
+  set(value: Vec3Like): void;
+  set(x: number, y: number, z: number): void;
+};
 export function writableVec3(): Vec3Writable;
 export function writableVec3(vec3: Vec3Like): Vec3Writable;
 export function writableVec3(x: number, y: number, z: number): Vec3Writable;
@@ -13,41 +16,35 @@ export function writableVec3(
   z?: number
 ): Vec3Writable {
   const $value = new Vec3();
-  if (arguments.length === 3) {
+  if (typeof y !== "undefined") {
     $value.set(x as number, y as number, z as number);
-  } else if (arguments.length === 1) {
+  } else if (typeof x !== "undefined") {
     if (Array.isArray(x)) {
       $value.set(x[0], x[1], x[2]);
     } else {
       $value.copy(x as unknown as Vec3);
     }
   }
-  const store = connectable(writable($value)) as Vec3Writable;
+  const store = writable($value) as Vec3Writable;
+  const { set: rawSet } = store;
   store.precision = 0.001;
-  const { onStep } = store;
+  store.onSet = () => {};
   store.onStep = (next) => {
     if ($value.almostEquals(next, store.precision) === false) {
       $value.copy(next);
-      onStep($value);
+      rawSet($value);
     }
   };
-  return store;
-}
-
-function connectable<T>(value: Writable<T>) {
-  const store: ConnectableStore<T> = {
-    subscribe: value.subscribe,
-    set($value: T) {
-      value.set($value);
-      store.onSet($value);
-    },
-    update(callback: ($value: T) => T) {
-      store.set(callback(get(value)));
-    },
-    onStep($value: T) {
-      value.set($value);
-    },
-    onSet() {},
+  store.set = (xx: Vec3Like | number, yy?: number, zz?: number) => {
+    if (typeof yy !== "undefined") {
+      $value.set(xx as number, yy as number, zz as number);
+    } else if (Array.isArray(xx)) {
+      $value.set(xx[0], xx[1], xx[2]);
+    } else {
+      $value.copy(xx as Vec3);
+    }
+    rawSet($value);
+    store.onSet($value);
   };
   return store;
 }

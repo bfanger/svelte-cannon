@@ -1,21 +1,23 @@
 <script lang="ts">
   import * as THREE from "three";
-  import * as CANNON from "cannon-es";
   import * as SC from "svelte-cubed";
   import * as PE from "$lib/index";
+  import type { Vec3Like } from "$lib/index";
 
   const distance = 20;
   const boxPosition = PE.writableVec3(0, 5, 0);
   const boxRotation = PE.writableVec3(0, 0, 0);
   const boxVelocity = PE.writableVec3();
   const ballPosition = PE.writableVec3(2, 2, 0);
+  let ballVelocity: Vec3Like = [0, 0, 0];
 
   let color = 0x999999;
   let visible = false;
 
-  function toggle() {
-    visible = !visible;
-    $ballPosition = new CANNON.Vec3(0.55, 3, 0);
+  function onClick() {
+    visible = true;
+    ballPosition.set(0.55, 3, 0);
+    ballVelocity = ballVelocity;
   }
 
   function onCollide() {
@@ -104,7 +106,7 @@
     />
     {#if visible}
       <!-- Ball -->
-      <PE.Body mass={2} position={ballPosition}>
+      <PE.Body mass={2} position={ballPosition} velocity={ballVelocity}>
         <PE.Sphere radius={0.2} />
       </PE.Body>
       <SC.Mesh
@@ -116,4 +118,4 @@
   </SC.Canvas>
 </PE.World>
 
-<svelte:body on:click={toggle} />
+<svelte:body on:click={onClick} />
