@@ -23,7 +23,7 @@ export function writableVec3(
     }
   }
   const store = connectable(writable($value)) as Vec3Writable;
-  store.precision = 0.0001;
+  store.precision = 0.001;
   const { onStep } = store;
   store.onStep = (next) => {
     if ($value.almostEquals(next, store.precision) === false) {

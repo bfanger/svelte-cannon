@@ -19,12 +19,14 @@
   export let position: ConnectablePropVec3 = undefined;
   export let rotation: ConnectablePropVec3 = undefined;
   export let velocity: ConnectablePropVec3 = undefined;
+  export let allowSleep = true;
 
   export const body = new Body({
     mass,
     position: vec3FromProp(position),
     quaternion: quaternionEulerProp(rotation),
     velocity: vec3FromProp(velocity),
+    allowSleep,
   });
 
   const context = getCannonContext();
@@ -51,12 +53,20 @@
     velocityStore.onSet = (v) => body.velocity.copy(v);
   }
 
+  $: body.allowSleep = allowSleep;
+
   forwardEvents(body, "wakeup", "sleepy", "sleep", "collide");
+  interface $$Events {
+    wakeup: (e: CustomEvent) => void;
+    sleepy: (e: CustomEvent) => void;
+    sleep: (e: CustomEvent) => void;
+    collide: (e: CustomEvent) => void;
+  }
 
   onMount(() => {
-    context.addBody(body);
+    context.world.addBody(body);
     return () => {
-      context.removeBody(body);
+      context.world.removeBody(body);
     };
   });
   const euler = new Vec3();

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { World, Body } from "cannon-es";
+  import { World } from "cannon-es";
   import { onMount, setContext } from "svelte";
   import { setCannonContext } from "../context-fns";
   import { forwardEvents } from "../lifecycle-fns";
@@ -7,23 +7,28 @@
   import type { Vec3Like } from "../types";
 
   export let gravity: Vec3Like | undefined = undefined;
-  export const world = new World({ gravity: vec3FromProp(gravity) });
+  export let allowSleep = false;
 
-  setCannonContext({
-    world,
-    addBody(body: Body) {
-      world.addBody(body);
-    },
-    removeBody(body: Body) {
-      world.removeBody(body);
-    },
+  export const world = new World({
+    gravity: vec3FromProp(gravity),
+    allowSleep,
   });
-  setContext("cannon/world", world);
 
   $: syncVec3FromProp(world.gravity, gravity);
 
+  setCannonContext({
+    world,
+  });
+  setContext("cannon/world", world);
+
   const timeStep = 1 / 60;
-  forwardEvents(world, "addBody", "removeBody", "preStep", "postStep");
+  forwardEvents(world, "preStep", "postStep", "addBody", "removeBody");
+  interface $$Events {
+    preStep: (e: CustomEvent) => void;
+    postStep: (e: CustomEvent) => void;
+    addBody: (e: CustomEvent) => void;
+    removeBody: (e: CustomEvent) => void;
+  }
 
   onMount(() => {
     let raf: number;

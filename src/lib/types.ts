@@ -14,6 +14,4 @@ export type ConnectablePropVec3 = ConnectableStore<Vec3> | Vec3Like | undefined;
 export type CannonContext = {
   world: World;
   body?: Body;
-  addBody(body: Body): void;
-  removeBody(body: Body): void;
 };
