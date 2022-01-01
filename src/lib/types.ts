@@ -14,4 +14,6 @@ export type ConnectablePropVec3 = ConnectableStore<Vec3> | Vec3Like | undefined;
 export type CannonContext = {
   world: World;
   body?: Body;
+  bodyToId: Map<Body, string>;
+  idToBody: Writable<Record<string, Body>>;
 };

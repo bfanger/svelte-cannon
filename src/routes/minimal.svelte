@@ -1,7 +1,7 @@
 <script lang="ts">
   import * as THREE from "three";
   import * as SC from "svelte-cubed";
-  import * as PE from "$lib/index"; // PE is short for Physics Engine
+  import * as PE from "$lib/index";
 
   const position = PE.writableVec3(0, 4, 0);
 </script>
@@ -19,3 +19,8 @@
     geometry={new THREE.SphereGeometry(1)}
   />
 </SC.Canvas>
+
+<svelte:head>
+  <title>Minimal</title>
+  <meta name="description" content="The usage example for in the Readme" />
+</svelte:head>

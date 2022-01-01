@@ -1,6 +1,7 @@
 <script lang="ts">
   import { World } from "cannon-es";
   import { onMount, setContext } from "svelte";
+  import { writable } from "svelte/store";
   import { setCannonContext } from "../context-fns";
   import { forwardEvents } from "../lifecycle-fns";
   import { vec3FromProp, syncVec3FromProp } from "../prop-fns";
@@ -18,6 +19,8 @@
 
   setCannonContext({
     world,
+    bodyToId: new Map(),
+    idToBody: writable({}),
   });
   setContext("cannon/world", world);
 

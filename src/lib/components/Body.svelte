@@ -13,9 +13,11 @@
     quaternionEulerProp,
     syncQuaternionEulerProp,
     isWritable,
+    syncId,
   } from "../prop-fns";
 
-  export let mass: number | undefined = undefined;
+  export let id: string | undefined = undefined;
+  export let mass = 0;
   export let position: ConnectablePropVec3 = undefined;
   export let rotation: ConnectablePropVec3 = undefined;
   export let velocity: ConnectablePropVec3 = undefined;
@@ -32,9 +34,8 @@
   const context = getCannonContext();
   setCannonContext({ ...context, body });
 
-  $: if (typeof mass !== "undefined") {
-    body.mass = mass;
-  }
+  $: syncId(context, body, id);
+  $: body.mass = mass;
   $: syncVec3FromProp(body.position, position);
   $: positionStore = isWritable(position) ? position : undefined;
   $: if (positionStore) {
@@ -67,6 +68,16 @@
     context.world.addBody(body);
     return () => {
       context.world.removeBody(body);
+      if (id) {
+        context.bodyToId.delete(body);
+        context.idToBody.update(($idToBody) => {
+          if ($idToBody[id as string] === body) {
+            // eslint-disable-next-line no-param-reassign
+            delete $idToBody[id as string];
+          }
+          return $idToBody;
+        });
+      }
     };
   });
   const euler = new Vec3();
