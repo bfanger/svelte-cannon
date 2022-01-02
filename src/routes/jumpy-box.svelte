@@ -6,8 +6,8 @@
 
   const distance = 20;
   const boxPosition = PE.writableVec3(0, 5, 0);
-  boxPosition.precision = 0.01;
-  let boxRotation = new CANNON.Vec3();
+  const boxRotation = PE.writableVec3();
+
   let boxVelocityY = 0;
   let ballPosition = new CANNON.Vec3(2, 2, 0);
   let ballVelocity = CANNON.Vec3.ZERO;
@@ -59,7 +59,7 @@
     <PE.Body
       mass={5}
       bind:position={$boxPosition}
-      bind:rotation={boxRotation}
+      bind:rotation={$boxRotation}
       velocity={[0, boxVelocityY, 0]}
       on:collide={onCollide}
       on:sleep={onSleep}
@@ -69,7 +69,7 @@
     </PE.Body>
     <SC.Mesh
       position={$boxPosition.toArray()}
-      rotation={boxRotation.toArray()}
+      rotation={$boxRotation.toArray()}
       geometry={new THREE.BoxGeometry()}
       material={new THREE.MeshPhongMaterial({ color })}
       castShadow

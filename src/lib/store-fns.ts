@@ -31,7 +31,11 @@ export function writableVec3(
     subscribe: value.subscribe,
     // eslint-disable-next-line @typescript-eslint/no-shadow
     set(x: Vec3Like | number, y?: number, z?: number) {
-      if (x instanceof Vec3 && $value.almostEquals(x, store.precision)) {
+      if (
+        x !== $value &&
+        x instanceof Vec3 &&
+        $value.almostEquals(x, store.precision)
+      ) {
         return;
       }
       if (typeof y !== "undefined") {

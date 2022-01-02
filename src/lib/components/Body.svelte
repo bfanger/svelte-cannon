@@ -64,6 +64,7 @@
       }
     };
   });
+  const euler = new Vec3();
   onPostStep(() => {
     if (body.sleepState === Body.SLEEPING) {
       return;
@@ -72,9 +73,9 @@
       position = body.position;
     }
     if (rotation instanceof Vec3) {
-      body.quaternion.toEuler(rotation, "YZX");
+      body.quaternion.toEuler(euler, "YZX");
       skipRotationRef.skip = true;
-      rotation = rotation;
+      rotation = euler;
     }
     if (velocity) {
       velocity = body.velocity;

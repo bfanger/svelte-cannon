@@ -1,7 +1,7 @@
 {
   "name": "svelte-cannon",
   "description": "Declarative Svelte components for the cannon-es physics engine",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -15,7 +15,7 @@
     "package": "svelte-kit package",
     "lint": "concurrently --kill-others-on-fail \"yarn:lint:*\"",
     "lint:prettier": "prettier --check --loglevel=warn \"src/**/*.svelte\"",
-    "lint:svelte-check": "svelte-check --fail-on-warnings --fail-on-hints",
+    "lint:svelte-check": "svelte-check --fail-on-warnings --fail-on-hints --ignore build,package",
     "lint:tsc": "tsc --noEmit",
     "lint:eslint": "eslint --ext=js,ts,svelte --max-warnings=0 src",
     "format": "prettier --write . && eslint --ext=js,ts,svelte --fix src",
@@ -35,7 +35,7 @@
     ],
     "*.svelte": [
       "eslint --max-warnings 0 --no-ignore",
-      "svelte-check --fail-on-warnings --fail-on-hints",
+      "svelte-check --fail-on-warnings --fail-on-hints  --ignore build,package",
       "prettier --check"
     ]
   },
