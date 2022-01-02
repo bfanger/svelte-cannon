@@ -5,55 +5,39 @@
   import { Body, Vec3 } from "cannon-es";
   import { onMount } from "svelte";
   import { getCannonContext, setCannonContext } from "../context-fns";
-  import type { ConnectablePropVec3 } from "../types";
+  import type { QuaternionLike, Vec3Like } from "../types";
   import { forwardEvents, onPostStep } from "../lifecycle-fns";
-  import {
-    vec3FromProp,
-    syncVec3FromProp,
-    quaternionEulerProp,
-    syncQuaternionEulerProp,
-    isWritable,
-    syncId,
-  } from "../prop-fns";
+  import { toVec3, toQuaternion } from "../conversion-fns";
+  import { syncVec3, syncId, syncQuaternion } from "../sync-fns";
 
   export let id: string | undefined = undefined;
   export let mass = 0;
-  export let position: ConnectablePropVec3 = undefined;
-  export let rotation: ConnectablePropVec3 = undefined;
-  export let velocity: ConnectablePropVec3 = undefined;
+  export let position: Vec3Like | undefined = undefined;
+  export let rotation: QuaternionLike | undefined = undefined;
+  export let velocity: Vec3Like | undefined = undefined;
   export let allowSleep = true;
 
   export const body = new Body({
     mass,
-    position: vec3FromProp(position),
-    quaternion: quaternionEulerProp(rotation),
-    velocity: vec3FromProp(velocity),
+    position: toVec3(position),
+    quaternion: toQuaternion(rotation),
+    velocity: toVec3(velocity),
     allowSleep,
   });
+
+  if (position !== undefined) {
+    position = body.position;
+  }
 
   const context = getCannonContext();
   setCannonContext({ ...context, body });
 
   $: syncId(context, body, id);
   $: body.mass = mass;
-  $: syncVec3FromProp(body.position, position);
-  $: positionStore = isWritable(position) ? position : undefined;
-  $: if (positionStore) {
-    positionStore.onSet = (v) => body.position.copy(v);
-  }
-
-  $: syncQuaternionEulerProp(body.quaternion, rotation);
-  $: rotationStore = isWritable(rotation) ? rotation : undefined;
-  $: if (rotationStore) {
-    rotationStore.onSet = (v) => body.position.copy(v);
-  }
-
-  $: syncVec3FromProp(body.velocity, velocity);
-  $: velocityStore = isWritable(velocity) ? velocity : undefined;
-  $: if (velocityStore) {
-    velocityStore.onSet = (v) => body.velocity.copy(v);
-  }
-
+  $: syncVec3(body.position, position);
+  const skipRotationRef = { skip: false };
+  $: syncQuaternion(body.quaternion, rotation, skipRotationRef);
+  $: syncVec3(body.velocity, velocity);
   $: body.allowSleep = allowSleep;
 
   forwardEvents(body, "wakeup", "sleepy", "sleep", "collide");
@@ -80,17 +64,20 @@
       }
     };
   });
-  const euler = new Vec3();
   onPostStep(() => {
-    if (positionStore) {
-      positionStore.onStep(body.position);
+    if (body.sleepState === Body.SLEEPING) {
+      return;
     }
-    if (rotationStore) {
-      body.quaternion.toEuler(euler, "YZX");
-      rotationStore.onStep(euler);
+    if (position instanceof Vec3) {
+      position = body.position;
     }
-    if (velocityStore) {
-      velocityStore.onStep(body.velocity);
+    if (rotation instanceof Vec3) {
+      body.quaternion.toEuler(rotation, "YZX");
+      skipRotationRef.skip = true;
+      rotation = rotation;
+    }
+    if (velocity) {
+      velocity = body.velocity;
     }
   });
 </script>

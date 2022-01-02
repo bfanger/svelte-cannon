@@ -3,7 +3,7 @@
   import { onPostStep } from "../lifecycle-fns";
   import { derivedBodies, getCannonContext } from "../context-fns";
   import type { Vec3Like } from "../types";
-  import { vec3FromProp } from "../prop-fns";
+  import { toVec3 } from "../conversion-fns";
 
   export let forA: string;
   export let forB: string;
@@ -22,10 +22,10 @@
     restLength,
     damping,
     stiffness,
-    localAnchorA: vec3FromProp(localAnchorA),
-    localAnchorB: vec3FromProp(localAnchorB),
-    worldAnchorA: vec3FromProp(worldAnchorA),
-    worldAnchorB: vec3FromProp(worldAnchorB),
+    localAnchorA: toVec3(localAnchorA),
+    localAnchorB: toVec3(localAnchorB),
+    worldAnchorA: toVec3(worldAnchorA),
+    worldAnchorB: toVec3(worldAnchorB),
   });
 
   let spring: Spring | undefined;

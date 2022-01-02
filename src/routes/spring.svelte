@@ -1,10 +1,11 @@
 <script lang="ts">
+  import * as CANNON from "cannon-es";
   import * as THREE from "three";
   import * as SC from "svelte-cubed";
   import * as PE from "$lib/index";
 
-  const position = PE.writableVec3(1, -1, 0);
-  const rotation = PE.writableVec3();
+  let position = new CANNON.Vec3(1, -2, 0);
+  let rotation = CANNON.Vec3.ZERO;
 </script>
 
 <SC.Canvas>
@@ -22,12 +23,12 @@
     </PE.Body>
     <SC.Mesh geometry={new THREE.SphereGeometry(0.1)} />
 
-    <PE.Body id="box" mass={5} {position} {rotation}>
+    <PE.Body id="box" mass={5} bind:position bind:rotation>
       <PE.Box size={[1, 1, 0.3]} />
     </PE.Body>
     <SC.Mesh
-      rotation={$rotation.toArray()}
-      position={$position.toArray()}
+      rotation={rotation.toArray()}
+      position={position.toArray()}
       geometry={new THREE.BoxGeometry(1, 1, 0.3)}
     />
   </PE.World>

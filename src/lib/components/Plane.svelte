@@ -1,9 +1,10 @@
 <script lang="ts">
-  import { Plane, Quaternion, Vec3 } from "cannon-es";
+  import { Plane } from "cannon-es";
   import Shape from "./Shape.svelte";
+  import type { Vec3Like, QuaternionLike } from "../types";
 
-  export let offset: Vec3 | undefined = undefined;
-  export let orientation: Quaternion | undefined = undefined;
+  export let offset: Vec3Like | undefined = undefined;
+  export let orientation: QuaternionLike | undefined = undefined;
 
   const shape = new Plane();
 </script>

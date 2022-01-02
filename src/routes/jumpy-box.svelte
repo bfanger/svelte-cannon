@@ -1,15 +1,16 @@
 <script lang="ts">
+  import * as CANNON from "cannon-es";
+  import * as PE from "$lib/index";
   import * as THREE from "three";
   import * as SC from "svelte-cubed";
-  import * as PE from "$lib/index";
-  import type { Vec3Like } from "$lib/index";
 
   const distance = 20;
   const boxPosition = PE.writableVec3(0, 5, 0);
-  const boxRotation = PE.writableVec3(0, 0, 0);
-  const boxVelocity = PE.writableVec3();
-  const ballPosition = PE.writableVec3(2, 2, 0);
-  let ballVelocity: Vec3Like = [0, 0, 0];
+  boxPosition.precision = 0.01;
+  let boxRotation = new CANNON.Vec3();
+  let boxVelocityY = 0;
+  let ballPosition = new CANNON.Vec3(2, 2, 0);
+  let ballVelocity = CANNON.Vec3.ZERO;
 
   let color = 0x999999;
   let visible = false;
@@ -17,7 +18,7 @@
   function onClick() {
     visible = true;
     ballPosition.set(0.55, 3, 0);
-    ballVelocity = ballVelocity;
+    ballVelocity = CANNON.Vec3.ZERO;
   }
 
   function onCollide() {
@@ -31,7 +32,7 @@
   }
 
   setTimeout(() => {
-    $boxVelocity.y = 6;
+    boxVelocityY = 5;
     color = 0xff5555;
   }, 2000);
 </script>
@@ -57,9 +58,9 @@
     <!-- Cube -->
     <PE.Body
       mass={5}
-      position={boxPosition}
-      rotation={boxRotation}
-      velocity={boxVelocity}
+      bind:position={$boxPosition}
+      bind:rotation={boxRotation}
+      velocity={[0, boxVelocityY, 0]}
       on:collide={onCollide}
       on:sleep={onSleep}
       on:wakeup={onWakeUp}
@@ -68,7 +69,7 @@
     </PE.Body>
     <SC.Mesh
       position={$boxPosition.toArray()}
-      rotation={$boxRotation.toArray()}
+      rotation={boxRotation.toArray()}
       geometry={new THREE.BoxGeometry()}
       material={new THREE.MeshPhongMaterial({ color })}
       castShadow
@@ -76,11 +77,11 @@
 
     {#if visible}
       <!-- Ball -->
-      <PE.Body mass={2} position={ballPosition} velocity={ballVelocity}>
+      <PE.Body mass={2} bind:position={ballPosition} velocity={ballVelocity}>
         <PE.Sphere radius={0.2} />
       </PE.Body>
       <SC.Mesh
-        position={$ballPosition.toArray()}
+        position={ballPosition.toArray()}
         geometry={new THREE.SphereBufferGeometry(0.2, 32, 16)}
         material={new THREE.MeshLambertMaterial({ color: 0x52a4ed })}
       />

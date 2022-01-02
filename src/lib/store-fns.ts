@@ -1,11 +1,11 @@
 import { Vec3 } from "cannon-es";
 import { writable } from "svelte/store";
-import type { ConnectableStore, Vec3Like } from "./types";
+import type { Writable } from "svelte/store";
+import type { Vec3Like } from "./types";
+import { toVec3 } from "./conversion-fns";
 
-type Vec3Writable = ConnectableStore<Vec3> & {
+type Vec3Writable = Writable<Vec3> & {
   precision: number;
-  set(value: Vec3Like): void;
-  set(x: number, y: number, z: number): void;
 };
 export function writableVec3(): Vec3Writable;
 export function writableVec3(vec3: Vec3Like): Vec3Writable;
@@ -25,26 +25,28 @@ export function writableVec3(
       $value.copy(x as unknown as Vec3);
     }
   }
-  const store = writable($value) as Vec3Writable;
-  const { set: rawSet } = store;
-  store.precision = 0.001;
-  store.onSet = () => {};
-  store.onStep = (next) => {
-    if ($value.almostEquals(next, store.precision) === false) {
-      $value.copy(next);
-      rawSet($value);
-    }
-  };
-  store.set = (xx: Vec3Like | number, yy?: number, zz?: number) => {
-    if (typeof yy !== "undefined") {
-      $value.set(xx as number, yy as number, zz as number);
-    } else if (Array.isArray(xx)) {
-      $value.set(xx[0], xx[1], xx[2]);
-    } else {
-      $value.copy(xx as Vec3);
-    }
-    rawSet($value);
-    store.onSet($value);
+  const value = writable($value) as Vec3Writable;
+
+  const store = {
+    subscribe: value.subscribe,
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    set(x: Vec3Like | number, y?: number, z?: number) {
+      if (x instanceof Vec3 && $value.almostEquals(x, store.precision)) {
+        return;
+      }
+      if (typeof y !== "undefined") {
+        $value.set(x as number, y as number, z as number);
+      } else if (Array.isArray(x)) {
+        $value.set(x[0], x[1], x[2]);
+      } else {
+        $value.copy(x as Vec3);
+      }
+      value.set($value);
+    },
+    update(updater: (val: Vec3) => Vec3Like) {
+      value.set(toVec3(updater($value)));
+    },
+    precision: 0.001,
   };
   return store;
 }
