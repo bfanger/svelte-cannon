@@ -3,6 +3,7 @@
   "description": "Declarative Svelte components for the cannon-es physics engine",
   "version": "0.5.1",
   "license": "MIT",
+  "homepage": "https://svelte-cannon.bfanger.nl/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/bfanger/svelte-cannon.git"

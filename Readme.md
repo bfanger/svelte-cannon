@@ -1,6 +1,6 @@
 # Svelte Cannon
 
-Declarative API using [Svelte](https://svelte.dev/) components to inferface with the [cannon-es](https://pmndrs.github.io/cannon-es/) physics engine.
+Use [Svelte](https://svelte.dev/) components to build a [cannon-es](https://pmndrs.github.io/cannon-es/) physics simulation.
 
 ## Installation
 
@@ -40,31 +40,31 @@ This example uses [svelte-cubed](https://svelte-cubed.vercel.app/) to display th
 Using the import `* as PE` is helpfull to avoid naming conflicts, [three](https://threejs.org/docs/#api/en/math/Sphere), [cannon-es](https://pmndrs.github.io/cannon-es/docs/classes/Sphere.html) and [svelte-cannon](./src/lib/components/Sphere.svelte) all export a `Sphere` for example.
 _(PE is short for **P**hysics **E**ngine)_
 
-Generally you'd want the nest the `PE.World` inside the `SC.Canvas` that allows subcomponents to use both the physics and the render engine.
+Generally you'd want the nest the `PE.World` inside the `SC.Canvas`, because that allows subcomponents to create both the physics engine and the render engine components.
 
 ## Shorthand notations
 
-Allowed values for setting a 3D vector:
+Allowed values for setting a 3D vector are:
 
 - `[1, 2, 3]`
 - `new CANNON.Vec3(1, 2, 3)`
 - `new THREE.Vector3(1, 2, 3)`
 - `{x: 1, y: 2, z: 3}`
 
-This allows short notations and reusing existing variables
+This allows for reusing existing variables and reduces boilerplate.
 
 ## Two way binding caveats
 
-1. `bind:property=` for 3D vectors only works when an instance of a `CANNON.Vec3` object is passed in.
+1. `bind:property=` for 3D vectors only works when an `CANNON.Vec3` object is passed.
 
-Due to the nature of physics engines a lot of properties could change every on frame.
-But recalculating the rotationVelocity of the ground plane would be wasteful.
 This restriction allows svelte-cannon to detect with properties you're interested in.
+Due to the nature of physics engines a lot of properties could change every on frame, recalculating the `velocity` of the ground plane would be wasteful.
 
-2. When the body is awake `bind:property=` will trigger changes even though the value of CANNON.Vec3 was not changed.
+2. When the body is awake `bind:property=` will trigger updates, but the value might not have changed.
 
-Syncing position the THREE.Mesh is fast, creating shadow values and checking for changes would be overhead.
+Syncing position the THREE.Mesh is a fast operation.
 `$: mesh.position.copy(position);` ( CANNON.Vec3 is compatible with THREE.Vector3 )
+Creating shadow values, recalculating and checking and for changes would be overhead.
 
 ## Imprecise stores
 
@@ -83,7 +83,7 @@ Syncing position the THREE.Mesh is fast, creating shadow values and checking for
 <SC.Mesh position={$position.toArray()} />
 ```
 
-This allows you to prevent sending values to the renderer that haven't changed.
+This allows you to prevent resending values to the renderer that haven't changed.
 
 From an usage perspective it acts as a `writable(new Vec3(0, 4, 0))` but also allows shorthand notations:
 
@@ -97,7 +97,7 @@ From an usage perspective it acts as a `writable(new Vec3(0, 4, 0))` but also al
 
 ## Forces and Contraints
 
-As bodies can have multiple constrains and forces can affect multiple bodies it doesn't translate to a component hierachy. HTML also has this problem with `<input>`s and `<label>`s, svelte-cannon approach is based on the `id=` and `for=` solution:
+As bodies can have multiple constrains and forces can affect multiple bodies it doesn't translate well to a component hierachy. HTML also has this problem with `<input>`s and `<label>`s, svelte-cannon approach is based on the `id=` and `for=` solution:
 
 ```svelte
 <PE.Body id="anchor" position={[0, 3, 0]} />
