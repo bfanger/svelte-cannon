@@ -3,6 +3,15 @@ import type { EventTarget } from "cannon-es";
 import { createEventDispatcher, onMount } from "svelte";
 import { getCannonContext } from "./context-fns";
 
+export function onPreStep(listener: () => void) {
+  const { world } = getCannonContext();
+  onMount(() => {
+    world.addEventListener("preStep", listener);
+    return () => {
+      world.removeEventListener("preStep", listener);
+    };
+  });
+}
 export function onPostStep(listener: () => void) {
   const { world } = getCannonContext();
   onMount(() => {

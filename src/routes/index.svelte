@@ -14,15 +14,15 @@
 
   <ul>
     <li>
-      <a href="jumpy-box">Jumpy box</a>
+      <a href="jumpy-box">Jumpy Box</a>
       <div class="description">
         A cube, a floor, some events, and maybe even a ball.
       </div>
     </li>
     <li>
-      <a href="minimal">Minimal</a>
+      <a href="pill-eater">Pill Eater</a>
       <div class="description">
-        A ball that keeps falling (the Readme example)
+        Top down game where the yellow hero hunts for power pills.
       </div>
     </li>
     <li>
@@ -32,6 +32,12 @@
         <a href="https://pmndrs.github.io/cannon-es/examples/spring">
           original by cannon-es
         </a>
+      </div>
+    </li>
+    <li>
+      <a href="minimal">Minimal</a>
+      <div class="description">
+        A ball that keeps falling (the Readme example)
       </div>
     </li>
   </ul>

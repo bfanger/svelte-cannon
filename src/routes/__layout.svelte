@@ -3,6 +3,10 @@
   <slot />
 </main>
 
+<svelte:head>
+  <title>svelte-cannon</title>
+</svelte:head>
+
 <style lang="scss">
   :global(html) {
     font-size: 10px;

@@ -3,6 +3,7 @@
   import * as PE from "$lib/index";
   import * as THREE from "three";
   import * as SC from "svelte-cubed";
+  import Fab from "../site/Fab.svelte";
 
   const distance = 20;
   const boxPosition = PE.writableVec3(0, 5, 0);
@@ -113,8 +114,12 @@
   </PE.World>
 </SC.Canvas>
 
+<Fab
+  href="https://github.com/bfanger/svelte-cannon/blob/main/src/routes/jumpy-box.svelte"
+/>
+
 <svelte:head>
-  <title>Misc</title>
+  <title>Jumpy Box</title>
   <meta
     name="description"
     content="Attempt at recreating https://pmndrs.github.io/cannon-es/examples/threejs_mousepick

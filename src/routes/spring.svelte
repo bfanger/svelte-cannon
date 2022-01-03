@@ -3,6 +3,7 @@
   import * as THREE from "three";
   import * as SC from "svelte-cubed";
   import * as PE from "$lib/index";
+  import Fab from "../site/Fab.svelte";
 
   let position = new CANNON.Vec3(1, -2, 0);
   let rotation = CANNON.Vec3.ZERO;
@@ -36,6 +37,9 @@
   <SC.PerspectiveCamera fov={24} near={5} far={2000} position={[0, 10, 15]} />
 </SC.Canvas>
 
+<Fab
+  href="https://github.com/bfanger/svelte-cannon/blob/main/src/routes/spring.svelte"
+/>
 <svelte:head>
   <title>Spring</title>
   <meta

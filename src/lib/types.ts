@@ -16,3 +16,10 @@ export type CannonContext = {
   bodyToId: Map<Body, string>;
   idToBody: Writable<Record<string, Body>>;
 };
+
+export type Dpad = {
+  up: boolean;
+  down: boolean;
+  left: boolean;
+  right: boolean;
+};
