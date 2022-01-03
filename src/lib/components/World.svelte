@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { World } from "cannon-es";
+  import { Broadphase, Solver, World } from "cannon-es";
   import { createEventDispatcher, onMount, setContext } from "svelte";
   import { writable } from "svelte/store";
   import { setCannonContext } from "../context-fns";
@@ -10,15 +10,27 @@
 
   export let gravity: Vec3Like | undefined = undefined;
   export let allowSleep = false;
+  export let broadphase: Broadphase | undefined = undefined;
+  export let solver: Solver | undefined = undefined;
+  export let quatNormalizeFast = false;
+  export let quatNormalizeSkip = 0;
 
   export const world = new World({
     gravity: toVec3(gravity),
     allowSleep,
+    broadphase,
+    solver,
+    quatNormalizeFast,
+    quatNormalizeSkip,
   });
   const dispatch = createEventDispatcher();
 
   $: syncVec3(world.gravity, gravity);
   $: world.allowSleep = allowSleep;
+  $: broadphase && (world.broadphase = broadphase);
+  $: solver && (world.solver = solver);
+  $: world.quatNormalizeFast = quatNormalizeFast;
+  $: world.quatNormalizeSkip = quatNormalizeSkip;
 
   setCannonContext({
     world,

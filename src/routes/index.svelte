@@ -1,4 +1,3 @@
-<h1>💣 svelte-cannon</h1>
 <div class="container">
   <p>
     A declarative approach to setting up a
@@ -31,7 +30,7 @@
       <div class="description">
         Box hanging on a spring
         <a href="https://pmndrs.github.io/cannon-es/examples/spring">
-          <small>original by cannon-es</small>
+          original by cannon-es
         </a>
       </div>
     </li>
@@ -42,23 +41,11 @@
   :global(html) {
     font-size: 10px;
   }
-  :global(body) {
-    margin: 0;
-    font: 1.6rem/1.3 -apple-system, "Segoe UI", sans-serif;
-  }
-  h1 {
-    margin: 0;
-    background: linear-gradient(to right, #06b6d4, #3b82f6);
-    color: white;
-    text-align: center;
-    padding: 20px;
-    margin-bottom: 3.5rem;
-    font-size: 3.8rem;
-    padding-right: 1em;
-  }
+
   .container {
     margin-left: auto;
     margin-right: auto;
+    padding-top: 3.5rem;
     width: 56rem;
     max-width: 90%;
     font-size: 1.6rem;
@@ -79,16 +66,8 @@
   li {
     margin-bottom: 1rem;
   }
-  a {
-    color: #2563eb;
-
-    text-decoration: none;
-    &:hover {
-      text-decoration: underline;
-    }
-  }
   .description {
-    color: #575757;
+    font-size: 1.4rem;
     margin-top: 0.2rem;
     margin-bottom: 0.8rem;
   }

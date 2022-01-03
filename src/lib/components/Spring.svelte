@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Body, Spring } from "cannon-es";
+  import { Body, Spring, SpringOptions } from "cannon-es";
   import { onPostStep } from "../lifecycle-fns";
   import { derivedBodies, getCannonContext } from "../context-fns";
   import type { Vec3Like } from "../types";
@@ -30,8 +30,7 @@
 
   let spring: Spring | undefined;
   // eslint-disable-next-line no-undef
-  type Options = ConstructorParameters<typeof Spring>[2];
-  function sync(values: [Body, Body] | false, options: Options) {
+  function sync(values: [Body, Body] | false, options: SpringOptions) {
     if (!values) {
       spring = undefined;
       return;

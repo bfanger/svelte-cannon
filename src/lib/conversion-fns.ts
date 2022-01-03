@@ -20,6 +20,9 @@ export function toQuaternion(
 export function toQuaternion(
   value: Vec3Like | undefined
 ): Quaternion | undefined {
+  if (value instanceof Quaternion || value === undefined) {
+    return value;
+  }
   // @todo Implement for non-euler QuaternionLike's
   const euler = toVec3(value);
   if (euler === undefined) {

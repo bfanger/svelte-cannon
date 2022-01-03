@@ -11,7 +11,7 @@
 
   const { body } = getCannonContext() as { body: Body };
   if (!body) {
-    throw new Error("Missing body, not nested inside <Body>");
+    throw new Error("Missing body, shape not nested inside <Body>");
   }
 
   onMount(() => {

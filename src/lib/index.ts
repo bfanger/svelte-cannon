@@ -3,6 +3,7 @@ export { writableVec3 } from "./store-fns";
 export { getCannonContext } from "./context-fns";
 export { default as World } from "./components/World.svelte";
 export { default as Body } from "./components/Body.svelte";
+export { default as Material } from "./components/Material.svelte";
 // Shapes
 export { default as Shape } from "./components/Shape.svelte";
 export { default as Box } from "./components/Box.svelte";
