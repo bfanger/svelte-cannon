@@ -12,23 +12,28 @@ export function toVec3(value: Vec3Like | undefined): Vec3 | undefined {
   }
   return new Vec3(value.x, value.y, value.z);
 }
+const eulerOrder = "YZX"; // cannon-es only supports _to_ "YZX"
 
 export function toQuaternion(value: QuaternionLike): Quaternion;
 export function toQuaternion(
-  value: Vec3Like | undefined
+  value: QuaternionLike | undefined
 ): Quaternion | undefined;
 export function toQuaternion(
-  value: Vec3Like | undefined
+  value: QuaternionLike | undefined
 ): Quaternion | undefined {
   if (value instanceof Quaternion || value === undefined) {
     return value;
   }
-  // @todo Implement for non-euler QuaternionLike's
-  const euler = toVec3(value);
-  if (euler === undefined) {
-    return undefined;
-  }
   const quaternion = new Quaternion();
-  quaternion.setFromEuler(euler.x, euler.y, euler.z, "YZX");
+  if (Array.isArray(value) && value.length === 4) {
+    quaternion.set(value[0], value[1], value[2], value[3]);
+    return quaternion;
+  }
+  if (typeof (value as Quaternion).w === "number") {
+    quaternion.copy(value as Quaternion);
+  } else {
+    const euler = toVec3(value);
+    quaternion.setFromEuler(euler.x, euler.y, euler.z, eulerOrder);
+  }
   return quaternion;
 }

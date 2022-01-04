@@ -77,7 +77,7 @@
   $: body.allowSleep = allowSleep;
   $: body.sleepSpeedLimit = sleepSpeedLimit;
   $: body.sleepTimeLimit = sleepTimeLimit;
-  const skipRotationRef = { skip: false };
+  const skipRotationRef = { skip: false, euler: new Vec3() };
   $: syncQuaternion(body.quaternion, rotation, skipRotationRef);
   $: syncQuaternion(body.quaternion, quaternion);
   $: syncVec3(body.angularVelocity, angularVelocity);
@@ -119,7 +119,6 @@
       }
     };
   });
-  const euler = new Vec3();
   onPostStep(() => {
     if (sleepState !== undefined && sleepState !== body.sleepState) {
       sleepState = body.sleepState;
@@ -133,13 +132,12 @@
     if (velocity instanceof Vec3) {
       velocity = body.velocity;
     }
-    if (rotation instanceof Vec3) {
-      body.quaternion.toEuler(euler, "YZX");
-      skipRotationRef.skip = true;
-      rotation = euler;
-    }
     if (quaternion instanceof Quaternion) {
       quaternion = body.quaternion;
+    } else if (rotation instanceof Vec3) {
+      body.quaternion.toEuler(skipRotationRef.euler, "YZX"); // @todo Implement XYZ order
+      skipRotationRef.skip = true;
+      rotation = skipRotationRef.euler;
     }
     if (angularVelocity instanceof Vec3) {
       angularVelocity = body.angularVelocity;

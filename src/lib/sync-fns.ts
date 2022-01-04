@@ -33,10 +33,12 @@ export function syncVec3(target: Vec3, value: Vec3Like | undefined): boolean {
   return true;
 }
 
+const eulerOrder = "YZX"; // cannon-es only supports _to_ "YZX"
+
 export function syncQuaternion(
   target: Quaternion,
   value: QuaternionLike | undefined,
-  skipRef?: { skip: boolean }
+  skipRef?: { euler: Vec3; skip: boolean }
 ): void {
   if (!value || target === value || skipRef?.skip) {
     if (skipRef) {
@@ -48,7 +50,24 @@ export function syncQuaternion(
   if (value instanceof Quaternion) {
     target.copy(value);
   } else if (value instanceof Vec3) {
-    target.setFromEuler(value.x, value.y, value.z, "YZX");
+    if (
+      skipRef &&
+      skipRef.euler.x === value.x &&
+      skipRef.euler.y === value.y &&
+      skipRef.euler.z === value.z
+    ) {
+      return;
+    }
+    target.setFromEuler(value.x, value.y, value.z, eulerOrder);
+  } else if (Array.isArray(value)) {
+    if (value.length === 4) {
+      target.set(value[0], value[1], value[2], value[3]);
+    } else {
+      target.setFromEuler(value[0], value[1], value[2], eulerOrder);
+    }
+  } else if (typeof (value as Quaternion).w === "number") {
+    target.set(value.x, value.y, value.z, (value as Quaternion).w);
+  } else {
+    target.setFromEuler(value.x, value.y, value.z, eulerOrder);
   }
-  // @todo Implement other QuaternionLike's
 }

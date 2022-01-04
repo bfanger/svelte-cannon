@@ -7,8 +7,8 @@ export type Vec3Like =
 
 export type QuaternionLike =
   | { x: number; y: number; z: number; w: number }
-  | [number, number, number]
-  | Vec3Like; // Euler
+  | [number, number, number, number] // Quaternion XYZW
+  | Vec3Like; // Euler YZX
 
 export type CannonContext = {
   world: World;
