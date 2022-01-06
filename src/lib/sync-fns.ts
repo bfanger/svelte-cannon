@@ -33,8 +33,7 @@ export function syncVec3(target: Vec3, value: Vec3Like | undefined): boolean {
   return true;
 }
 
-const eulerOrder = "YZX"; // cannon-es only supports _to_ "YZX"
-
+const euler = new Vec3();
 export function syncQuaternion(
   target: Quaternion,
   value: QuaternionLike | undefined,
@@ -58,16 +57,19 @@ export function syncQuaternion(
     ) {
       return;
     }
-    target.setFromEuler(value.x, value.y, value.z, eulerOrder);
+    euler.copy(value);
+    target.setFromEuler(value.x, value.y, value.z, "XYZ");
   } else if (Array.isArray(value)) {
     if (value.length === 4) {
       target.set(value[0], value[1], value[2], value[3]);
     } else {
-      target.setFromEuler(value[0], value[1], value[2], eulerOrder);
+      euler.set(value[0], value[1], value[2]);
+      target.setFromEuler(value[0], value[1], value[2], "XYZ");
     }
   } else if (typeof (value as Quaternion).w === "number") {
     target.set(value.x, value.y, value.z, (value as Quaternion).w);
   } else {
-    target.setFromEuler(value.x, value.y, value.z, eulerOrder);
+    euler.set(value.x, value.y, value.z);
+    target.setFromEuler(value.x, value.y, value.z, "XYZ");
   }
 }

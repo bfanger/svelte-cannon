@@ -5,7 +5,9 @@
 
   export let x: number;
   export let y: number;
+
   let hit = false;
+
   function onHit() {
     hit = true;
   }

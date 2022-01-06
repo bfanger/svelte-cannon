@@ -8,14 +8,14 @@
   export let x: number;
   export let y: number;
 
-  const size = tweened(0.2);
+  const size = tweened(0.2, { duration: 300 });
   onMount(() => {
     const timer = setInterval(() => {
-      $size = 0.3;
+      $size = 0.25;
       setTimeout(() => {
         $size = 0.15;
       }, 200);
-    }, 600);
+    }, 800);
     return () => {
       clearInterval(timer);
     };

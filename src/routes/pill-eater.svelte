@@ -8,7 +8,7 @@
 </script>
 
 <SC.Canvas shadows={THREE.PCFSoftShadowMap} outputEncoding={THREE.sRGBEncoding}>
-  <PE.World gravity={[0, 0, 9.81]}>
+  <PE.World gravity={[0, 0, 9.81]} allowSleep>
     <Level />
 
     <Hero />

@@ -14,7 +14,7 @@
   import { getCannonContext, setCannonContext } from "../context-fns";
   import type { QuaternionLike, Vec3Like } from "../types";
   import { forwardEvents, onPostStep } from "../lifecycle-fns";
-  import { toVec3, toQuaternion } from "../conversion-fns";
+  import { toVec3, toQuaternion, quaternionToEuler } from "../conversion-fns";
   import { syncVec3, syncId, syncQuaternion } from "../sync-fns";
 
   export let id: string | undefined = undefined;
@@ -102,9 +102,30 @@
     sleep: (e: CustomEvent) => void;
     collide: (e: CustomEvent) => void;
   }
+  function sync() {
+    if (position instanceof Vec3) {
+      position = body.position;
+    }
+    if (velocity instanceof Vec3) {
+      velocity = body.velocity;
+    }
+    if (quaternion instanceof Quaternion) {
+      quaternion = body.quaternion;
+    } else if (rotation instanceof Vec3) {
+      quaternionToEuler(body.quaternion, skipRotationRef.euler);
+      skipRotationRef.skip = true;
+      rotation = skipRotationRef.euler;
+    }
+    if (angularVelocity instanceof Vec3) {
+      angularVelocity = body.angularVelocity;
+    }
+  }
 
   onMount(() => {
     context.world.addBody(body);
+    if (body.type === Body.STATIC) {
+      sync();
+    }
     return () => {
       context.world.removeBody(body);
       if (id) {
@@ -123,25 +144,10 @@
     if (sleepState !== undefined && sleepState !== body.sleepState) {
       sleepState = body.sleepState;
     }
-    if (body.sleepState === Body.SLEEPING) {
+    if (body.sleepState === Body.SLEEPING || body.type === Body.STATIC) {
       return;
     }
-    if (position instanceof Vec3) {
-      position = body.position;
-    }
-    if (velocity instanceof Vec3) {
-      velocity = body.velocity;
-    }
-    if (quaternion instanceof Quaternion) {
-      quaternion = body.quaternion;
-    } else if (rotation instanceof Vec3) {
-      body.quaternion.toEuler(skipRotationRef.euler, "YZX"); // @todo Implement XYZ order
-      skipRotationRef.skip = true;
-      rotation = skipRotationRef.euler;
-    }
-    if (angularVelocity instanceof Vec3) {
-      angularVelocity = body.angularVelocity;
-    }
+    sync();
   });
 </script>
 

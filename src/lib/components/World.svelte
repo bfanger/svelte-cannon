@@ -42,6 +42,8 @@
   interface $$Events {
     addBody: (e: CustomEvent) => void;
     removeBody: (e: CustomEvent) => void;
+    preStep: (e: CustomEvent) => void;
+    postStep: (e: CustomEvent) => void;
   }
   forwardEvents(world, "addBody", "removeBody");
 

@@ -89,12 +89,15 @@ export function createDpad(
         set(pressed);
       }
     }
-    window.addEventListener("keydown", onKeydown);
-    window.addEventListener("keyup", onKeyup);
-    return () => {
-      window.removeEventListener("keydown", onKeydown);
-      window.removeEventListener("keyup", onKeyup);
-    };
+    if (typeof window !== "undefined") {
+      window.addEventListener("keydown", onKeydown);
+      window.addEventListener("keyup", onKeyup);
+      return () => {
+        window.removeEventListener("keydown", onKeydown);
+        window.removeEventListener("keyup", onKeyup);
+      };
+    }
+    return undefined;
   });
   return store;
 }
