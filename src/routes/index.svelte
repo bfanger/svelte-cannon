@@ -40,6 +40,16 @@
         A ball that keeps falling (the Readme example)
       </div>
     </li>
+    <li>
+      <a href="debugger">Debugger</a>
+      <div class="description">
+        Using the cannon-es-debugger, depends on additional packages:<br />
+        <a href="https://github.com/pmndrsnd /cannon-es-debugger">
+          cannon-es-debugger
+        </a>
+        and <a href="https://threejs.org">threejs</a>
+      </div>
+    </li>
   </ul>
 </div>
 

@@ -1,7 +1,7 @@
 <script lang="ts">
-  import type { Shape, Body } from "cannon-es";
+  import type { Shape } from "cannon-es";
   import { onMount } from "svelte";
-  import { getCannonContext } from "../context-fns";
+  import { getCannonContext, setCannonContext } from "../context-fns";
   import { toVec3, toQuaternion } from "../conversion-fns";
   import type { Vec3Like, QuaternionLike } from "../types";
 
@@ -9,7 +9,10 @@
   export let offset: Vec3Like | undefined = undefined;
   export let orientation: QuaternionLike | undefined = undefined;
 
-  const { body } = getCannonContext() as { body: Body };
+  const context = getCannonContext();
+  setCannonContext({ ...context, shape }); // assume shape is not changed
+
+  const { body } = context;
   if (!body) {
     throw new Error("Missing body, shape not nested inside <Body>");
   }

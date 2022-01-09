@@ -28,7 +28,7 @@
   }
 
   header {
-    background: linear-gradient(to right, #06b6d4, #3b82f6);
+    background: linear-gradient(to right, #06cdd4, #8a55ec);
     height: 7rem;
     display: flex;
     align-items: center;

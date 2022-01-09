@@ -1,4 +1,4 @@
-import type { World, Body } from "cannon-es";
+import type { World, Body, Shape } from "cannon-es";
 import type { Writable } from "svelte/store";
 
 export type Vec3Like =
@@ -13,6 +13,7 @@ export type QuaternionLike =
 export type CannonContext = {
   world: World;
   body?: Body;
+  shape?: Shape;
   bodyToId: Map<Body, string>;
   idToBody: Writable<Record<string, Body>>;
 };

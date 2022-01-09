@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { Material, Body } from "cannon-es";
+  import { Material } from "cannon-es";
   import { getCannonContext } from "../context-fns";
 
   export let friction = -1;
@@ -8,16 +8,17 @@
 
   export const material = new Material({ friction, restitution });
 
-  const { body } = getCannonContext() as { body: Body };
+  const { body, shape } = getCannonContext();
   if (!body) {
     throw new Error("Missing body, material not nested inside <Body>");
   }
 
   onMount(() => {
-    body.material = material;
+    const target = shape || body;
+    target.material = material;
     return () => {
-      if (body.material === material) {
-        body.material = null;
+      if (target.material === material) {
+        target.material = null;
       }
     };
   });
