@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import { get } from "svelte/store";
   import { Material } from "cannon-es";
   import { getCannonContext } from "../context-fns";
 
@@ -13,13 +14,23 @@
     throw new Error("Missing body, material not nested inside <Body>");
   }
 
-  onMount(() => {
-    const target = shape || body;
-    target.material = material;
-    return () => {
-      if (target.material === material) {
-        target.material = null;
-      }
-    };
-  });
+  if (shape) {
+    onMount(() => {
+      shape.subscribe(($shape) => {
+        // eslint-disable-next-line no-param-reassign
+        $shape.material = material;
+      });
+      return () => {
+        const $shape = get(shape);
+        $shape.material = null;
+      };
+    });
+  } else {
+    onMount(() => {
+      body.material = material;
+      return () => {
+        body.material = null;
+      };
+    });
+  }
 </script>

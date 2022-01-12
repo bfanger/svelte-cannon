@@ -40,7 +40,7 @@ This example uses [svelte-cubed](https://svelte-cubed.vercel.app/) to display th
 Using the import `* as PE` is helpfull to avoid naming conflicts, [three](https://threejs.org/docs/#api/en/math/Sphere), [cannon-es](https://pmndrs.github.io/cannon-es/docs/classes/Sphere.html) and [svelte-cannon](./src/lib/components/Sphere.svelte) all export a `Sphere` for example.
 _(PE is short for **P**hysics **E**ngine)_
 
-Generally you'd want the nest the `PE.World` inside the `SC.Canvas`, because that allows subcomponents to create both the physics engine and the render engine components.
+Generally you'd want the nest the `SC.Canvas` inside the `PE.World`, because that allows subcomponents to create both the physics engine and the render engine components.
 
 ## Shorthand notations
 
