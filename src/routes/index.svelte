@@ -50,6 +50,10 @@
         and <a href="https://threejs.org">threejs</a>
       </div>
     </li>
+    <li>
+      <a href="constraints/bridge">Bridge</a>
+      <div class="description">Example of using the LockConstraint</div>
+    </li>
   </ul>
 </div>
 

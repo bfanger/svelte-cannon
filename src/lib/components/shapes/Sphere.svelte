@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Sphere } from "cannon-es";
-  import Shape from "./Shape.svelte";
-  import type { Vec3Like, QuaternionLike } from "../types";
+  import Shape from "../Shape.svelte";
+  import type { Vec3Like, QuaternionLike } from "../../types";
 
   export let radius: number;
   export let offset: Vec3Like | undefined = undefined;

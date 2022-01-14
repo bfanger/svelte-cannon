@@ -42,6 +42,6 @@
   href="https://github.com/bfanger/svelte-cannon/blob/main/src/routes/pill-eater.svelte"
 />
 <svelte:head>
-  <title>Minimal</title>
-  <meta name="description" content="The usage example for in the Readme" />
+  <title>Pill Eater</title>
+  <meta name="description" content="Small mini game, Go get the power pill" />
 </svelte:head>

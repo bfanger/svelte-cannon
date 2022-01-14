@@ -5,7 +5,6 @@
   import * as SC from "svelte-cubed";
   import Fab from "../site/Fab.svelte";
 
-  const distance = 20;
   const boxPosition = PE.writableVec3(0, 5, 0);
   const boxRotation = PE.writableVec3();
 
@@ -13,7 +12,7 @@
   let ballPosition = new CANNON.Vec3(2, 2, 0);
   let ballVelocity = CANNON.Vec3.ZERO;
 
-  let color = 0x999999;
+  let color = 0xbababa;
   let visible = false;
 
   function onClick() {
@@ -26,10 +25,10 @@
     color = 0x5555ff;
   }
   function onSleep() {
-    color = 0x555555;
+    color = 0x2a2a2a;
   }
   function onWakeUp() {
-    color = 0x999999;
+    color = 0xbababa;
   }
 
   setTimeout(() => {
@@ -38,21 +37,22 @@
   }, 2000);
 </script>
 
-<SC.Canvas
-  fog={new THREE.Fog(0x000000, 500, 1000)}
-  shadows={THREE.PCFSoftShadowMap}
-  outputEncoding={THREE.sRGBEncoding}
-  antialias
->
-  <PE.World gravity={[0, -9.81, 0]} allowSleep>
+<PE.World gravity={[0, -9.81, 0]} allowSleep>
+  <SC.Canvas
+    background={new THREE.Color(0x34756)}
+    fog={new THREE.FogExp2(0x34756, 0.05)}
+    shadows={THREE.PCFSoftShadowMap}
+    outputEncoding={THREE.sRGBEncoding}
+    antialias
+  >
     <!-- Ground -->
     <PE.Body rotation={[-Math.PI / 2, 0, 0]}>
       <PE.Plane />
     </PE.Body>
     <SC.Mesh
-      geometry={new THREE.PlaneBufferGeometry(100, 100, 1, 1)}
       rotation={[-Math.PI / 2, 0, 0]}
-      material={new THREE.MeshLambertMaterial({ color: 0x777777 })}
+      geometry={new THREE.PlaneBufferGeometry(100, 100, 1, 1)}
+      material={new THREE.MeshLambertMaterial({ color: 0x90b5fb })}
       receiveShadow
     />
 
@@ -84,35 +84,23 @@
       <SC.Mesh
         position={ballPosition.toArray()}
         geometry={new THREE.SphereBufferGeometry(0.2, 32, 16)}
-        material={new THREE.MeshLambertMaterial({ color: 0x52a4ed })}
+        material={new THREE.MeshLambertMaterial({ color: 0xa0a0a0 })}
+        castShadow
       />
     {/if}
 
     <SC.PerspectiveCamera
-      position={[0, 2, 10]}
+      position={[2, 2, 10]}
       fov={30}
       near={0.5}
       far={1000}
-      target={[0, 2, 0]}
+      target={[0, 1.5, 0]}
     />
-    <SC.AmbientLight color={0x666666} />
-    <SC.DirectionalLight
-      position={[-distance, distance, distance]}
-      intensity={1.2}
-      shadow={{
-        camera: {
-          left: -distance,
-          right: distance,
-          top: distance,
-          bottom: -distance,
-          far: 3 * distance,
-          near: distance,
-        },
-        mapSize: [2048, 2048],
-      }}
-    />
-  </PE.World>
-</SC.Canvas>
+    <SC.AmbientLight intensity={0.6} />
+    <SC.DirectionalLight position={[-4, 8, 9]} intensity={1.2} shadow />
+    <SC.OrbitControls maxPolarAngle={Math.PI / 2} target={[0, 1.5, 0]} />
+  </SC.Canvas>
+</PE.World>
 
 <Fab
   href="https://github.com/bfanger/svelte-cannon/blob/main/src/routes/jumpy-box.svelte"
@@ -122,8 +110,8 @@
   <title>Jumpy Box</title>
   <meta
     name="description"
-    content="Attempt at recreating https://pmndrs.github.io/cannon-es/examples/threejs_mousepick
-    But is missing the interaction https://github.com/Rich-Harris/svelte-cubed/issues/5"
+    content="Started with recreating https://pmndrs.github.io/cannon-es/examples/threejs_mousepick
+    But made something else because of missing interaction options: https://github.com/Rich-Harris/svelte-cubed/issues/5"
   />
 </svelte:head>
 <svelte:body on:click={onClick} />
