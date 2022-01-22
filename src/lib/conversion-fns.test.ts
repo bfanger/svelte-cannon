@@ -1,4 +1,5 @@
 import { Quaternion, Vec3 } from "cannon-es";
+import { describe, it, expect } from "vitest";
 import { quaternionToEuler } from "./conversion-fns";
 
 describe("conversion-fns", () => {

@@ -2,11 +2,12 @@
   "extends": "./tsconfig.json",
   "include": [
     "src/**/*.d.ts",
-    "src/**/*.ts",
     "src/**/*.svelte",
     // Additional extensions for eslint
+    "**/*.ts",
     "**/*.cjs",
     ".*/**/*.cjs",
+    ".storybook/main.cjs",
     ".*.cjs",
     "**/*.js",
     ".*.js"

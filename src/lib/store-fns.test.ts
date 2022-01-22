@@ -1,5 +1,6 @@
 import { Vec3 } from "cannon-es";
 import { get } from "svelte/store";
+import { describe, it, expect } from "vitest";
 import { writableVec3 } from "./store-fns";
 
 describe("store-fns", () => {
