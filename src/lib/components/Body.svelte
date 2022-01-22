@@ -24,7 +24,7 @@
   export let position: Vec3Like | undefined = undefined;
   export let velocity: Vec3Like | undefined = undefined;
   export let mass = 0;
-  export let material: Material | undefined = undefined;
+  export let material: Material | null = null;
   export let linearDamping = 0.01;
   export let type: BodyType = mass <= 0.0 ? Body.STATIC : Body.DYNAMIC;
   export let allowSleep = true;
@@ -47,7 +47,7 @@
     position: toVec3(position),
     mass,
     velocity: toVec3(velocity),
-    material,
+    material: material || undefined,
     linearDamping,
     type,
     allowSleep,
@@ -71,6 +71,7 @@
   $: body.collisionResponse = collisionResponse;
   $: syncVec3(body.position, position);
   $: syncVec3(body.velocity, velocity);
+  $: body.material = material;
   $: body.mass = mass;
   $: body.linearDamping = linearDamping;
   $: type && (body.type = type);

@@ -9,6 +9,9 @@
 
   export const material = new Material({ friction, restitution });
 
+  $: material.friction = friction;
+  $: material.restitution = restitution;
+
   const { body, shape } = getCannonContext();
   if (!body) {
     throw new Error("Missing body, material not nested inside <Body>");
