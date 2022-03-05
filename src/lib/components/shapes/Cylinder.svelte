@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { Cylinder, Material } from "cannon-es";
+  import { Cylinder } from "cannon-es";
+  import type { Material } from "cannon-es";
   import type { Vec3Like, QuaternionLike } from "../../types";
   import Shape from "../Shape.svelte";
 

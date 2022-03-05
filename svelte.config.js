@@ -6,5 +6,10 @@ export default {
   preprocess: preprocess(),
   kit: {
     adapter: adapter(),
+    vite: {
+      build: {
+        chunkSizeWarningLimit: 700,
+      },
+    },
   },
 };

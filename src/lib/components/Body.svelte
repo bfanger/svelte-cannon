@@ -2,8 +2,8 @@
   /**
    * https://pmndrs.github.io/cannon-es/docs/classes/Body.html
    */
-  import { Body, Material, Quaternion, Vec3 } from "cannon-es";
-  import type { BodyType, BodySleepState } from "cannon-es";
+  import { Body, Vec3, Quaternion } from "cannon-es";
+  import type { BodyType, BodySleepState, Material } from "cannon-es";
   import { onMount } from "svelte";
   import { getCannonContext, setCannonContext } from "../context-fns";
   import type { QuaternionLike, Vec3Like } from "../types";

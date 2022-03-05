@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { Box, Material } from "cannon-es";
+  import { Box } from "cannon-es";
+  import type { Material } from "cannon-es";
   import { toVec3 } from "../../conversion-fns";
   import { syncVec3 } from "../../sync-fns";
   import type { Vec3Like, QuaternionLike } from "../../types";

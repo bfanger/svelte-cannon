@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onDestroy } from "svelte";
-  import { LockConstraint, Body, Constraint } from "cannon-es";
+  import { LockConstraint } from "cannon-es";
+  import type { Constraint, Body } from "cannon-es";
   import { derivedBodies, getCannonContext } from "../../context-fns";
 
   let targets: string[];

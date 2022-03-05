@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { Plane, Material } from "cannon-es";
+  import { Plane } from "cannon-es";
+  import type { Material } from "cannon-es";
   import Shape from "../Shape.svelte";
   import type { Vec3Like, QuaternionLike } from "../../types";
 

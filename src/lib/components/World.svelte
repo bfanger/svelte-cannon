@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { Broadphase, Solver, World } from "cannon-es";
+  import { World } from "cannon-es";
+  import type { Broadphase, Solver } from "cannon-es";
   import { createEventDispatcher, onMount, setContext } from "svelte";
   import { writable } from "svelte/store";
   import { setCannonContext } from "../context-fns";
