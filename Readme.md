@@ -57,7 +57,7 @@ This allows for reusing existing variables and reduces boilerplate.
 
 1. `bind:property=` for 3D vectors only works when an `CANNON.Vec3` object is passed.
 
-This restriction allows svelte-cannon to detect with properties you're interested in.
+This restriction allows svelte-cannon to detect which properties you're interested in.
 Due to the nature of physics engines a lot of properties could change every on frame, recalculating the `velocity` of the ground plane would be wasteful.
 
 2. When the body is awake `bind:property=` will trigger updates, but the value might not have changed.
@@ -85,7 +85,7 @@ Creating shadow values, recalculating and checking and for changes would be over
 
 This allows you to prevent resending values to the renderer that haven't changed.
 
-From an usage perspective it acts as a `writable(new Vec3(0, 4, 0))` but also allows shorthand notations:
+From a usage perspective it acts as a `writable(new Vec3(0, 4, 0))` but also allows shorthand notations:
 
 - `position.set(1, 2, 3)`
 - `position.set(new CANNON.Vec3(1, 2, 3))`
@@ -97,7 +97,7 @@ From an usage perspective it acts as a `writable(new Vec3(0, 4, 0))` but also al
 
 ## Forces and Contraints
 
-As bodies can have multiple constrains and forces can affect multiple bodies it doesn't translate well to a component hierachy. HTML also has this problem with `<input>`s and `<label>`s, svelte-cannon approach is based on the `id=` and `for=` solution:
+As bodies can have multiple constrains and forces can affect multiple bodies it doesn't translate well to a component hierarchy. HTML also has this problem with `<input>`s and `<label>`s, svelte-cannon approach is based on the `id=` and `for=` solution:
 
 ```svelte
 <PE.Body id="anchor" position={[0, 3, 0]} />

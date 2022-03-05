@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { Body, Spring, SpringOptions } from "cannon-es";
+  import { Body, Spring } from "cannon-es";
+  import type { SpringOptions } from "cannon-es";
   import { onPostStep } from "../lifecycle-fns";
   import { derivedBodies, getCannonContext } from "../context-fns";
   import type { Vec3Like } from "../types";

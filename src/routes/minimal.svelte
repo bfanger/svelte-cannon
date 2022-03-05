@@ -26,5 +26,5 @@
 />
 <svelte:head>
   <title>Minimal</title>
-  <meta name="description" content="The usage example for in the Readme" />
+  <meta name="description" content="The usage example from the Readme" />
 </svelte:head>

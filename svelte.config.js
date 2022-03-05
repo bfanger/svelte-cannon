@@ -1,4 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
 import preprocess from "svelte-preprocess";
 import adapter from "@sveltejs/adapter-static";
 
@@ -6,7 +5,6 @@ import adapter from "@sveltejs/adapter-static";
 export default {
   preprocess: preprocess(),
   kit: {
-    target: "svelte-app",
     adapter: adapter(),
   },
 };
