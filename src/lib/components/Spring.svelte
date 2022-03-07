@@ -2,7 +2,7 @@
   import { Spring } from "cannon-es";
   import type { Body, SpringOptions } from "cannon-es";
   import { onPostStep } from "../lifecycle-fns";
-  import { derivedBodies, getCannonContext } from "../context-fns";
+  import { bodiesFor } from "../context-fns";
   import type { Vec3Like } from "../types";
   import { toVec3 } from "../conversion-fns";
 
@@ -16,8 +16,8 @@
   export let worldAnchorA: Vec3Like | undefined = undefined;
   export let worldAnchorB: Vec3Like | undefined = undefined;
 
-  const context = getCannonContext();
-  $: bodies = derivedBodies(context.idToBody, [forA, forB]);
+  const bodies = bodiesFor([forA, forB]);
+  $: bodies.for([forA, forB]);
 
   $: sync($bodies, {
     restLength,
@@ -31,7 +31,7 @@
 
   let spring: Spring | undefined;
   // eslint-disable-next-line no-undef
-  function sync(values: [Body, Body] | false, options: SpringOptions) {
+  function sync(values: Body[] | false, options: SpringOptions) {
     if (!values) {
       spring = undefined;
       return;
