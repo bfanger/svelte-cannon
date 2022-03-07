@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { LockConstraint } from "cannon-es";
+  import { DistanceConstraint } from "cannon-es";
   import type { Body } from "cannon-es";
   import { derivedBodies, getCannonContext } from "../../context-fns";
   import Constraint from "../Constraint.svelte";
@@ -7,6 +7,7 @@
 
   let targets: string[];
   export { targets as for };
+  export let distance: number | undefined = undefined;
   export let maxForce = 1e6;
 
   const { idToBody } = getCannonContext();
@@ -15,16 +16,24 @@
   $: changedTargets.set(targets);
 
   $: bodies = derivedBodies(idToBody, $changedTargets);
-  $: $bodies && sync($bodies, { maxForce });
+  $: $bodies && sync($bodies, { distance, maxForce });
 
-  let constraints: LockConstraint[] = [];
+  let constraints: DistanceConstraint[] = [];
 
-  function sync(entries: Body[], options: { maxForce: number }) {
-    let previous: Body | undefined;
+  function sync(
+    entries: Body[],
+    _: {
+      distance: number | undefined;
+      maxForce: number;
+    }
+  ) {
     constraints = [];
+    let previous: Body | undefined;
     for (const body of entries) {
       if (previous) {
-        constraints.push(new LockConstraint(previous, body, options));
+        constraints.push(
+          new DistanceConstraint(previous, body, distance, maxForce)
+        );
       }
       previous = body;
     }

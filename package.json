@@ -1,7 +1,7 @@
 {
   "name": "svelte-cannon",
   "description": "Declarative Svelte components for the cannon-es physics engine",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "license": "MIT",
   "homepage": "https://svelte-cannon.bfanger.nl/",
   "repository": {
@@ -84,6 +84,6 @@
     "three": "0.135.0",
     "typescript": "^4.6.2",
     "vite": "^2.8.6",
-    "vitest": "^0.5.9"
+    "vitest": "^0.6.0"
   }
 }

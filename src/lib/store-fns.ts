@@ -1,5 +1,5 @@
 import { Vec3 } from "cannon-es";
-import { readable, writable } from "svelte/store";
+import { get, readable, writable } from "svelte/store";
 import type { Readable, Writable } from "svelte/store";
 import type { Vec3Like, Dpad } from "./types";
 import { toVec3 } from "./conversion-fns";
@@ -53,6 +53,26 @@ export function writableVec3(
     precision: 0.001,
   };
   return store;
+}
+
+export function writableTargets(targets: string[]): Writable<string[]> {
+  const store = writable(targets);
+  let previous = targets.join("\n");
+
+  function set(update: string[]) {
+    const next = update.join("\n");
+    if (previous !== next) {
+      store.set(update);
+      previous = next;
+    }
+  }
+  return {
+    subscribe: store.subscribe,
+    set,
+    update(updater) {
+      set(updater(get(store)));
+    },
+  };
 }
 
 export function createDpad(
