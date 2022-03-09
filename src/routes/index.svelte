@@ -26,12 +26,13 @@
       </div>
     </li>
     <li>
-      <a href="spring">Spring</a>
+      <a href="constraints/bridge">Bridge</a>
+      <div class="description">Example of using the LockConstraint</div>
+    </li>
+    <li>
+      <a href="constraints/double-pendulum">Double pendulum</a>
       <div class="description">
-        Box hanging on a spring
-        <a href="https://pmndrs.github.io/cannon-es/examples/spring">
-          original by cannon-es
-        </a>
+        Example of a chaotic rich dynamic behavior - Wikipedia
       </div>
     </li>
     <li>
@@ -44,15 +45,20 @@
       <a href="debugger">Debugger</a>
       <div class="description">
         Using the cannon-es-debugger, depends on additional packages:<br />
-        <a href="https://github.com/pmndrsnd /cannon-es-debugger">
+        <a href="https://github.com/pmndrs/cannon-es-debugger">
           cannon-es-debugger
         </a>
         and <a href="https://threejs.org">threejs</a>
       </div>
     </li>
     <li>
-      <a href="constraints/bridge">Bridge</a>
-      <div class="description">Example of using the LockConstraint</div>
+      <a href="spring">Spring</a>
+      <div class="description">
+        Box hanging on a spring
+        <a href="https://pmndrs.github.io/cannon-es/examples/spring">
+          original by cannon-es
+        </a>
+      </div>
     </li>
   </ul>
 </div>

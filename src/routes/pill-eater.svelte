@@ -43,5 +43,5 @@
 />
 <svelte:head>
   <title>Pill Eater</title>
-  <meta name="description" content="Small mini game, Go get the power pill" />
+  <meta name="description" content="Small mini game, Go get the power pill!" />
 </svelte:head>
