@@ -82,10 +82,10 @@
   href="https://github.com/bfanger/svelte-cannon/blob/main/src/routes/constraints/double-pendulum.svelte"
 />
 <svelte:head>
-  <title>Double pendulum - Simulated using cannon-es DistanceContraint</title>
+  <title>Double pendulum - Simulated using cannon-es DistanceConstraint</title>
   <meta
     name="description"
-    content="Double pendulum an example of the DistanceContraint, inspired by KiwiCo Glowing Pendulum"
+    content="Double pendulum an example of the DistanceConstraint, inspired by KiwiCo Glowing Pendulum"
   />
 </svelte:head>
 

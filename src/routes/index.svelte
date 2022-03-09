@@ -32,7 +32,8 @@
     <li>
       <a href="constraints/double-pendulum">Double pendulum</a>
       <div class="description">
-        Example of a chaotic rich dynamic behavior - Wikipedia
+        Using the DistanceConstraint to "exhibit rich dynamic behavior -
+        <a href="https://en.wikipedia.org/wiki/Double_pendulum">Wikipedia</a>"
       </div>
     </li>
     <li>

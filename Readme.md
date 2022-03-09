@@ -95,7 +95,7 @@ From a usage perspective it acts as a `writable(new Vec3(0, 4, 0))` but also all
 - `$position = [1, 2, 3]`
 - `$position.x = 1; $position.x = 2; $position.x = 3;`
 
-## Forces and Contraints
+## Forces and Constraints
 
 As bodies can have multiple constrains and forces can affect multiple bodies it doesn't translate well to a component hierarchy. HTML also has this problem with `<input>`s and `<label>`s, svelte-cannon approach is based on the `id=` and `for=` solution:
 
