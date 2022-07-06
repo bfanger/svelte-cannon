@@ -9,10 +9,5 @@ export default {
       default: true,
     },
     adapter: adapter(),
-    vite: {
-      build: {
-        chunkSizeWarningLimit: 700,
-      },
-    },
   },
 };

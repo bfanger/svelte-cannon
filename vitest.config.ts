@@ -5,8 +5,7 @@ import { configDefaults, defineConfig } from "vitest/config";
 export default defineConfig({
   plugins: [svelte({ hot: !process.env.VITEST })],
   test: {
-    global: true,
-    environment: "jsdom",
+    environment: "happy-dom",
     exclude: [...configDefaults.exclude, "package"],
   },
 });
