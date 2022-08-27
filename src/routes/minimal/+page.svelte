@@ -3,7 +3,7 @@
   import * as PE from "$lib/index";
   import * as THREE from "three";
   import * as SC from "svelte-cubed";
-  import Fab from "../site/Fab.svelte";
+  import Fab from "../../site/Fab.svelte";
 
   let position = new CANNON.Vec3(0, 4, 0);
 </script>
@@ -22,7 +22,7 @@
   />
 </SC.Canvas>
 <Fab
-  href="https://github.com/bfanger/svelte-cannon/blob/main/src/routes/minimal.svelte"
+  href="https://github.com/bfanger/svelte-cannon/blob/main/src/routes/minimal/%2Bpage.svelte"
 />
 <svelte:head>
   <title>Minimal</title>

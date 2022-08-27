@@ -2,9 +2,9 @@
   import * as PE from "$lib/index";
   import * as THREE from "three";
   import * as SC from "svelte-cubed";
-  import Hero from "../site/pill-eater/Hero.svelte";
-  import Level from "../site/pill-eater/Level.svelte";
-  import Fab from "../site/Fab.svelte";
+  import Hero from "../../site/pill-eater/Hero.svelte";
+  import Level from "../../site/pill-eater/Level.svelte";
+  import Fab from "../../site/Fab.svelte";
 </script>
 
 <SC.Canvas shadows={THREE.PCFSoftShadowMap} outputEncoding={THREE.sRGBEncoding}>
@@ -39,7 +39,7 @@
 </SC.Canvas>
 
 <Fab
-  href="https://github.com/bfanger/svelte-cannon/blob/main/src/routes/pill-eater.svelte"
+  href="https://github.com/bfanger/svelte-cannon/blob/main/src/routes/pill-eater/%2Bpage.svelte"
 />
 <svelte:head>
   <title>Pill Eater</title>

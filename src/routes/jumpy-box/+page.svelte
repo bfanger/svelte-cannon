@@ -3,7 +3,7 @@
   import * as PE from "$lib/index";
   import * as THREE from "three";
   import * as SC from "svelte-cubed";
-  import Fab from "../site/Fab.svelte";
+  import Fab from "../../site/Fab.svelte";
 
   const boxPosition = PE.writableVec3(0, 5, 0);
   const boxRotation = PE.writableVec3();
@@ -103,7 +103,7 @@
 </PE.World>
 
 <Fab
-  href="https://github.com/bfanger/svelte-cannon/blob/main/src/routes/jumpy-box.svelte"
+  href="https://github.com/bfanger/svelte-cannon/blob/main/src/routes/jumpy-box/%2Bpage.svelte"
 />
 
 <svelte:head>

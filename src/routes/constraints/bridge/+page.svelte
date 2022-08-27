@@ -3,7 +3,7 @@
   import * as SC from "svelte-cubed";
   import * as CANNON from "cannon-es";
   import * as PE from "$lib/index";
-  import Fab from "../../site/Fab.svelte";
+  import Fab from "../../../site/Fab.svelte";
 
   const bridge = new THREE.Color(0xfa4203);
   const water = new THREE.Color(0x9abde3);
@@ -76,7 +76,7 @@
   </SC.Canvas>
 </PE.World>
 <Fab
-  href="https://github.com/bfanger/svelte-cannon/blob/main/src/routes/constraints/bridge.svelte"
+  href="https://github.com/bfanger/svelte-cannon/blob/main/src/routes/constraints/bridge/%2Bpage.svelte"
 />
 <svelte:head>
   <title>Bridge - LockConstraint example</title>

@@ -22,9 +22,7 @@
     "format": "prettier --write . && eslint --ext=js,ts,svelte --fix src",
     "prepare": "husky install",
     "test": "vitest run",
-    "test:watch": "npm run test -- --watch",
-    "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "test:watch": "npm run test -- --watch"
   },
   "prettier": "eslint-config-triple/.prettierrc",
   "lint-staged": {
@@ -45,18 +43,13 @@
     "cannon-es": "*"
   },
   "devDependencies": {
-    "@storybook/addon-actions": "^6.4.19",
-    "@storybook/addon-essentials": "^6.4.19",
-    "@storybook/addon-links": "^6.4.19",
-    "@storybook/addon-svelte-csf": "^2.0.4",
-    "@storybook/svelte": "^6.4.19",
     "@sveltejs/adapter-static": "next",
     "@sveltejs/kit": "^1.0.0-next.360",
     "@testing-library/svelte": "^3.0.3",
     "@types/three": "0.135.0",
     "@typescript-eslint/eslint-plugin": "^5.13.0",
     "@typescript-eslint/parser": "^5.13.0",
-    "cannon-es": "^0.19.0",
+    "cannon-es": "^0.20.0",
     "cannon-es-debugger": "^1.0.0",
     "concurrently": "^7.0.0",
     "eslint": "^8.10.0",
@@ -75,7 +68,6 @@
     "prettier": "^2.5.1",
     "prettier-plugin-svelte": "^2.6.0",
     "sass": "^1.49.9",
-    "storybook-builder-vite": "^0.1.17",
     "svelte": "^3.46.4",
     "svelte-check": "^2.4.5",
     "svelte-cubed": "^0.2.1",
@@ -83,7 +75,7 @@
     "svelte2tsx": "^0.5.5",
     "three": "0.135.0",
     "typescript": "^4.6.2",
-    "vite": "^2.8.6",
-    "vitest": "^0.17.0"
+    "vite": "^3.0.9",
+    "vitest": "^0.22.1"
   }
 }

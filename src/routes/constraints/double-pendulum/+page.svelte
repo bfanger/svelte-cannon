@@ -3,7 +3,7 @@
 
   import * as CANNON from "cannon-es";
   import * as PE from "$lib/index";
-  import Fab from "../../site/Fab.svelte";
+  import Fab from "../../../site/Fab.svelte";
   import { onMount } from "svelte";
 
   const linearDamping = 0.06;
@@ -79,7 +79,7 @@
 </PE.World>
 
 <Fab
-  href="https://github.com/bfanger/svelte-cannon/blob/main/src/routes/constraints/double-pendulum.svelte"
+  href="https://github.com/bfanger/svelte-cannon/blob/main/src/routes/constraints/double-pendulum/%2Bpage.svelte"
 />
 <svelte:head>
   <title>Double pendulum - Simulated using cannon-es DistanceConstraint</title>

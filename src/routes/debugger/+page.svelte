@@ -1,8 +1,8 @@
 <script lang="ts">
   import * as CANNON from "cannon-es";
   import * as PE from "$lib/index";
-  import Fab from "../site/Fab.svelte";
-  import DebugCanvas from "../site/ThreeRenderer.svelte";
+  import Fab from "../../site/Fab.svelte";
+  import DebugCanvas from "../../site/ThreeRenderer.svelte";
   import Debugger from "$lib/debugger";
   import type { Scene } from "three";
 
@@ -27,7 +27,7 @@
 </PE.World>
 
 <Fab
-  href="https://github.com/bfanger/svelte-cannon/blob/main/src/routes/debugger.svelte"
+  href="https://github.com/bfanger/svelte-cannon/blob/main/src/routes/debugger/%2Bpage.svelte"
 />
 <svelte:head>
   <title>Debugger (cannon-es-debugger)</title>
