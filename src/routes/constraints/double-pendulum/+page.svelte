@@ -12,10 +12,12 @@
   let penPosition = new CANNON.Vec3(1, -1.5, 0);
   let trailsCanvas: HTMLCanvasElement;
   let sticksCanvas: HTMLCanvasElement;
+  let magnet: false | { x: number; y: number } = false;
+
   let onPostStep: () => void | undefined;
 
   function scale(value: number) {
-    return value * 256 + 512;
+    return value * 250 + 512;
   }
   onMount(() => {
     const overlayCtx = sticksCanvas.getContext("2d");
@@ -40,12 +42,14 @@
       ctx.fillStyle = `rgba(255,255,255,${eraserStrength})`;
       ctx.fillRect(0, 0, 1024, 1024);
 
-      ctx.beginPath();
-      ctx.moveTo(scale(previous.x), scale(previous.y));
-      const hue = (Date.now() - start) / 8;
-      ctx.strokeStyle = `hsl(${hue},100%,70%)`;
-      ctx.lineTo(scale(penPosition.x), scale(penPosition.y));
-      ctx.stroke();
+      if (!magnet) {
+        ctx.beginPath();
+        ctx.moveTo(scale(previous.x), scale(previous.y));
+        const hue = (Date.now() - start) / 8;
+        ctx.strokeStyle = `hsl(${hue},100%,70%)`;
+        ctx.lineTo(scale(penPosition.x), scale(penPosition.y));
+        ctx.stroke();
+      }
       previous.copy(penPosition);
 
       overlayCtx.clearRect(0, 0, 1024, 1024);
@@ -61,12 +65,81 @@
       overlayCtx.moveTo(scale(jointPosition.x), scale(jointPosition.y));
       overlayCtx.lineTo(scale(penPosition.x), scale(penPosition.y));
       overlayCtx.stroke();
+
+      if (magnet) {
+        overlayCtx.beginPath();
+        overlayCtx.lineWidth = 1.5;
+        overlayCtx.strokeStyle = "#8f8f8f";
+        overlayCtx.moveTo(scale(penPosition.x), scale(penPosition.y));
+        overlayCtx.lineTo(scale(magnet.x), scale(magnet.y));
+        overlayCtx.stroke();
+      }
     };
   });
+
+  function onDown(e: MouseEvent | TouchEvent) {
+    magnet = eventToPoint(e);
+  }
+  function onUp() {
+    magnet = false;
+  }
+  function onMove(e: MouseEvent | TouchEvent) {
+    const mouseEvent = e as MouseEvent;
+    const touchEvent = e as TouchEvent;
+    if (mouseEvent.buttons || touchEvent.touches) {
+      magnet = eventToPoint(e);
+    } else {
+      magnet = false;
+    }
+  }
+
+  function eventToPoint(e: MouseEvent | TouchEvent) {
+    const bounds = (e.target as HTMLCanvasElement).getBoundingClientRect();
+    const offset = { x: 0, y: 0 };
+    const factor = { x: 1, y: 1 };
+    const client = { x: 0, y: 0 };
+    const mouseEvent = e as MouseEvent;
+    if (mouseEvent.clientX) {
+      client.x = mouseEvent.clientX;
+      client.y = mouseEvent.clientY;
+    } else {
+      const touchEvent = e as TouchEvent;
+      client.x = touchEvent.touches[0].clientX;
+      client.y = touchEvent.touches[0].clientY;
+    }
+
+    if (bounds.width > bounds.height) {
+      offset.x = (bounds.width - bounds.height) / 2;
+      factor.x = bounds.width / bounds.height;
+    } else {
+      offset.y = (bounds.height - bounds.width) / 2;
+      factor.y = bounds.height / bounds.width;
+    }
+    const relative = {
+      x: ((client.x - bounds.left - offset.x) / bounds.width) * factor.x - 0.5,
+      y: ((client.y - bounds.top - offset.y) / bounds.height) * factor.y - 0.5,
+    };
+
+    return {
+      x: relative.x * 4,
+      y: relative.y * 4,
+    };
+  }
 </script>
 
 <canvas bind:this={trailsCanvas} width="1024" height="1024" />
-<canvas bind:this={sticksCanvas} width="1024" height="1024" />
+<canvas
+  bind:this={sticksCanvas}
+  width="1024"
+  height="1024"
+  class:magnet
+  on:mousedown|preventDefault={onDown}
+  on:mousemove={onMove}
+  on:mouseup={onUp}
+  on:touchstart|preventDefault={onDown}
+  on:touchmove={onMove}
+  on:touchend={onUp}
+/>
 <PE.World gravity={[0, 9.81, 0]} on:postStep={onPostStep}>
   <PE.DistanceConstraint for={["anchor", "joint", "pen"]} distance={1} />
   <PE.Body id="anchor" mass={0} position={[0, -0.5, 0]} />
@@ -76,6 +149,12 @@
   <PE.Body id="pen" mass={1} {linearDamping} bind:position={penPosition}>
     <PE.Sphere radius={0.2} />
   </PE.Body>
+
+  {#if magnet}
+    <PE.Body id="magnet" mass={0} position={[magnet.x, magnet.y, 0]} />
+
+    <PE.DistanceConstraint for={["pen", "magnet"]} distance={0} maxForce={5} />
+  {/if}
 </PE.World>
 
 <Fab
@@ -97,5 +176,9 @@
     width: 100%;
     height: 100%;
     object-fit: contain;
+    cursor: grab;
+  }
+  .magnet {
+    cursor: grabbing;
   }
 </style>

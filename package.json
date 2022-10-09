@@ -13,7 +13,7 @@
     "dev": "vite dev",
     "build": "vite build",
     "preview": "vite preview",
-    "package": "svelte-kit package",
+    "package": "svelte-package",
     "lint": "concurrently --kill-others-on-fail \"yarn:lint:*\"",
     "lint:prettier": "prettier --check --loglevel=warn \"src/**/*.svelte\"",
     "lint:svelte-check": "svelte-check --fail-on-warnings --fail-on-hints --ignore build,package",
@@ -45,6 +45,7 @@
   "devDependencies": {
     "@sveltejs/adapter-static": "next",
     "@sveltejs/kit": "^1.0.0-next.360",
+    "@sveltejs/package": "^1.0.0-next.5",
     "@testing-library/svelte": "^3.0.3",
     "@types/three": "0.135.0",
     "@typescript-eslint/eslint-plugin": "^5.13.0",
