@@ -30,7 +30,7 @@
   });
 
   let spring: Spring | undefined;
-  // eslint-disable-next-line no-undef
+
   function sync(values: Body[] | false, options: SpringOptions) {
     if (!values) {
       spring = undefined;

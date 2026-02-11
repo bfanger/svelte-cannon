@@ -12,7 +12,11 @@
   const bodies = bodiesFor(targets);
   $: bodies.for(targets);
 
-  $: $bodies && sync($bodies, { distance, maxForce });
+  $: {
+    if ($bodies) {
+      sync($bodies, { distance, maxForce });
+    }
+  }
 
   let constraints: DistanceConstraint[] = [];
 
@@ -21,14 +25,14 @@
     _: {
       distance: number | undefined;
       maxForce: number;
-    }
+    },
   ) {
     constraints = [];
     let previous: Body | undefined;
     for (const body of entries) {
       if (previous) {
         constraints.push(
-          new DistanceConstraint(previous, body, distance, maxForce)
+          new DistanceConstraint(previous, body, distance, maxForce),
         );
       }
       previous = body;

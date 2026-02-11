@@ -15,10 +15,10 @@ export function toVec3(value: Vec3Like | undefined): Vec3 | undefined {
 
 export function toQuaternion(value: QuaternionLike): Quaternion;
 export function toQuaternion(
-  value: QuaternionLike | undefined
+  value: QuaternionLike | undefined,
 ): Quaternion | undefined;
 export function toQuaternion(
-  value: QuaternionLike | undefined
+  value: QuaternionLike | undefined,
 ): Quaternion | undefined {
   if (value instanceof Quaternion || value === undefined) {
     return value;
@@ -66,7 +66,7 @@ export function quaternionToEuler(source: Quaternion, target: Vec3): void {
   const mat10 = 1 - (xx + yy);
 
   // matrix 4 to euler XYZ
-  /* eslint-disable no-param-reassign */
+
   target.y = Math.asin(Math.max(-1, Math.min(1, mat8)));
 
   if (Math.abs(mat8) < 0.9999999) {
@@ -76,5 +76,4 @@ export function quaternionToEuler(source: Quaternion, target: Vec3): void {
     target.x = Math.atan2(mat6, mat5);
     target.z = 0;
   }
-  /* eslint-enable no-param-reassign */
 }

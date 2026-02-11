@@ -43,7 +43,7 @@
 <SC.Mesh
   position={$position.toArray()}
   rotation={$rotation.toArray()}
-  geometry={new THREE.OctahedronBufferGeometry(0.4, 2)}
+  geometry={new THREE.OctahedronGeometry(0.4, 2)}
   material={new THREE.MeshLambertMaterial({ color: 0xdfd703 })}
   castShadow
 />

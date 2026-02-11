@@ -1,4 +1,3 @@
-/* eslint-disable import/prefer-default-export */
 import type { EventTarget } from "cannon-es";
 import { createEventDispatcher, onMount } from "svelte";
 import { getCannonContext } from "./context-fns";

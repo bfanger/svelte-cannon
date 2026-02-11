@@ -1,14 +1,14 @@
 import { sveltekit } from "@sveltejs/kit/vite";
-import { configDefaults, type UserConfig } from "vitest/config";
+import devtoolsJson from "vite-plugin-devtools-json";
+import { defineConfig, configDefaults } from "vitest/config";
 
-const config: UserConfig = {
-  plugins: [sveltekit()],
+export default defineConfig({
+  plugins: [devtoolsJson(), sveltekit()],
+  css: { devSourcemap: true },
   test: {
     exclude: [...configDefaults.exclude, "package"],
   },
   build: {
-    chunkSizeWarningLimit: 700,
+    // chunkSizeWarningLimit: 700,
   },
-};
-
-export default config;
+});

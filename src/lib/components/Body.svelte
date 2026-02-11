@@ -41,13 +41,13 @@
     position: toVec3(position),
     mass,
     velocity: toVec3(velocity),
-    material: material || undefined,
+    material: material ?? undefined,
     linearDamping,
     type,
     allowSleep,
     sleepSpeedLimit,
     sleepTimeLimit,
-    quaternion: toQuaternion(rotation || quaternion),
+    quaternion: toQuaternion(rotation ?? quaternion),
     angularVelocity: toVec3(angularVelocity),
     fixedRotation,
     angularDamping,
@@ -68,7 +68,11 @@
   $: body.material = material;
   $: body.mass = mass;
   $: body.linearDamping = linearDamping;
-  $: type && (body.type = type);
+  $: {
+    if (type) {
+      body.type = type;
+    }
+  }
   $: body.allowSleep = allowSleep;
   $: body.sleepSpeedLimit = sleepSpeedLimit;
   $: body.sleepTimeLimit = sleepTimeLimit;
@@ -91,12 +95,6 @@
   }
 
   forwardEvents(body, "wakeup", "sleepy", "sleep", "collide");
-  interface $$Events {
-    wakeup: (e: CustomEvent) => void;
-    sleepy: (e: CustomEvent) => void;
-    sleep: (e: CustomEvent) => void;
-    collide: (e: CustomEvent) => void;
-  }
   function sync() {
     if (position instanceof Vec3) {
       position = body.position;
@@ -126,9 +124,8 @@
       if (id) {
         context.bodyToId.delete(body);
         context.idToBody.update(($idToBody) => {
-          if ($idToBody[id as string] === body) {
-            // eslint-disable-next-line no-param-reassign
-            delete $idToBody[id as string];
+          if ($idToBody[id!] === body) {
+            delete $idToBody[id!];
           }
           return $idToBody;
         });

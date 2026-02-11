@@ -30,7 +30,7 @@
 <PE.Body rotation={groundRotation}>
   <PE.Plane />
   <SC.Mesh
-    geometry={new THREE.PlaneBufferGeometry(100, 100, 1, 1)}
+    geometry={new THREE.PlaneGeometry(100, 100, 1, 1)}
     rotation={groundRotation}
     material={new THREE.MeshLambertMaterial({ color: 0x050505 })}
     receiveShadow

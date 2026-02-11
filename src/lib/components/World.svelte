@@ -28,8 +28,16 @@
 
   $: syncVec3(world.gravity, gravity);
   $: world.allowSleep = allowSleep;
-  $: broadphase && (world.broadphase = broadphase);
-  $: solver && (world.solver = solver);
+  $: {
+    if (broadphase) {
+      world.broadphase = broadphase;
+    }
+  }
+  $: {
+    if (solver) {
+      world.solver = solver;
+    }
+  }
   $: world.quatNormalizeFast = quatNormalizeFast;
   $: world.quatNormalizeSkip = quatNormalizeSkip;
 
@@ -40,12 +48,6 @@
   });
   setContext("cannon/world", world);
 
-  interface $$Events {
-    addBody: (e: CustomEvent) => void;
-    removeBody: (e: CustomEvent) => void;
-    preStep: (e: CustomEvent) => void;
-    postStep: (e: CustomEvent) => void;
-  }
   forwardEvents(world, "addBody", "removeBody");
 
   onMount(() => {

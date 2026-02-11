@@ -20,7 +20,6 @@
   if (shape) {
     onMount(() => {
       shape.subscribe(($shape) => {
-        // eslint-disable-next-line no-param-reassign
         $shape.material = material;
       });
       return () => {

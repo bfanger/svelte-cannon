@@ -13,11 +13,11 @@ export function writableVec3(x: number, y: number, z: number): Vec3Writable;
 export function writableVec3(
   x?: Vec3Like | number,
   y?: number,
-  z?: number
+  z?: number,
 ): Vec3Writable {
   const $value = new Vec3();
   if (typeof y !== "undefined") {
-    $value.set(x as number, y as number, z as number);
+    $value.set(x as number, y, z!);
   } else if (typeof x !== "undefined") {
     if (Array.isArray(x)) {
       $value.set(x[0], x[1], x[2]);
@@ -39,7 +39,7 @@ export function writableVec3(
         return;
       }
       if (typeof y !== "undefined") {
-        $value.set(x as number, y as number, z as number);
+        $value.set(x as number, y, z!);
       } else if (Array.isArray(x)) {
         $value.set(x[0], x[1], x[2]);
       } else {
@@ -65,7 +65,7 @@ export function createDpad(
     a: "left",
     s: "down",
     d: "right",
-  }
+  },
 ): Readable<Dpad> {
   const pressed: Dpad = {
     up: false,

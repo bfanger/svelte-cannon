@@ -26,7 +26,7 @@
   let prevMaterial: Material | undefined;
   function syncMaterial(_material: Material | undefined) {
     if (prevMaterial !== _material) {
-      shape.material = _material || null;
+      shape.material = _material ?? null;
     }
     prevMaterial = _material;
   }
@@ -35,7 +35,7 @@
   function sync(
     _shape: Shape,
     _offset?: Vec3Like,
-    _orientation?: QuaternionLike
+    _orientation?: QuaternionLike,
   ) {
     if (prevShape) {
       body.removeShape(prevShape);

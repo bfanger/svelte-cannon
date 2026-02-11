@@ -16,8 +16,8 @@
     },
   });
   $: if (weak) {
-    color.set(new THREE.Color(0xac0cdf), { duration: 0 }).then(() => {
-      color.set(new THREE.Color(0x1f1a9d), { duration: 2000 });
+    void color.set(new THREE.Color(0xac0cdf), { duration: 0 }).then(() => {
+      void color.set(new THREE.Color(0x1f1a9d), { duration: 2000 });
     });
   }
 

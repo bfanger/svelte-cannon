@@ -127,7 +127,7 @@
   }
 </script>
 
-<canvas bind:this={trailsCanvas} width="1024" height="1024" />
+<canvas bind:this={trailsCanvas} width="1024" height="1024"></canvas>
 <canvas
   bind:this={sticksCanvas}
   width="1024"
@@ -139,7 +139,7 @@
   on:touchstart|preventDefault={onDown}
   on:touchmove={onMove}
   on:touchend={onUp}
-/>
+></canvas>
 <PE.World gravity={[0, 9.81, 0]} on:postStep={onPostStep}>
   <PE.DistanceConstraint for={["anchor", "joint", "pen"]} distance={1} />
   <PE.Body id="anchor" mass={0} position={[0, -0.5, 0]} />
@@ -170,14 +170,18 @@
 
 <style>
   canvas {
+    cursor: grab;
+
     position: absolute;
     top: 0;
     left: 0;
+
     width: 100%;
     height: 100%;
+
     object-fit: contain;
-    cursor: grab;
   }
+
   .magnet {
     cursor: grabbing;
   }

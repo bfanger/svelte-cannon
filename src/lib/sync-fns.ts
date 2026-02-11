@@ -5,7 +5,7 @@ import type { Vec3Like, QuaternionLike, CannonContext } from "./types";
 export function syncId(
   context: CannonContext,
   body: Body,
-  id: string | undefined
+  id: string | undefined,
 ) {
   const previous = context.bodyToId.get(body);
   const $idToBody = get(context.idToBody);
@@ -37,11 +37,10 @@ const euler = new Vec3();
 export function syncQuaternion(
   target: Quaternion,
   value: QuaternionLike | undefined,
-  skipRef?: { euler: Vec3; skip: boolean }
+  skipRef?: { euler: Vec3; skip: boolean },
 ): void {
   if (!value || target === value || skipRef?.skip) {
     if (skipRef) {
-      // eslint-disable-next-line no-param-reassign
       skipRef.skip = false;
     }
     return;
@@ -50,8 +49,7 @@ export function syncQuaternion(
     target.copy(value);
   } else if (value instanceof Vec3) {
     if (
-      skipRef &&
-      skipRef.euler.x === value.x &&
+      skipRef?.euler.x === value.x &&
       skipRef.euler.y === value.y &&
       skipRef.euler.z === value.z
     ) {

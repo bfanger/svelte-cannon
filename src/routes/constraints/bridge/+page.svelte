@@ -26,7 +26,7 @@
   <SC.Canvas background={sky} {fog}>
     <SC.Mesh
       rotation={[-Math.PI / 2, 0, 0]}
-      geometry={new THREE.PlaneBufferGeometry(100, 100, 1, 1)}
+      geometry={new THREE.PlaneGeometry(100, 100, 1, 1)}
       material={new THREE.MeshLambertMaterial({
         color: water,
         opacity: 0.5,
@@ -34,22 +34,22 @@
       })}
     />
 
-    {#each Array(2) as __dirname, i}
+    {#each Array(2) as _, i}
       <SC.Mesh
         position={[i ? -half - 0.4 - 0.05 : half, -2.75, -0.5]}
-        geometry={new THREE.BoxBufferGeometry(0.4, 8, 0.4)}
+        geometry={new THREE.BoxGeometry(0.4, 8, 0.4)}
         material={new THREE.MeshLambertMaterial({ color: bridge })}
       />
       <SC.Mesh
         position={[i ? -half - 0.4 - 0.05 : half, -2.75, 0.5]}
-        geometry={new THREE.BoxBufferGeometry(0.4, 8, 0.4)}
+        geometry={new THREE.BoxGeometry(0.4, 8, 0.4)}
         material={new THREE.MeshLambertMaterial({ color: bridge })}
       />
       <PE.Body id="stand{i}" position={[i ? -half - 0.2 : half - 0.3, 0.7, 0]}>
         <PE.Box size={[0.15, 0.1, 0.5]} />
         <SC.Mesh
           position={[i ? -half - 0.2 : half - 0.3, 0.7, 0]}
-          geometry={new THREE.BoxBufferGeometry(0.3, 0.2, 1)}
+          geometry={new THREE.BoxGeometry(0.3, 0.2, 1)}
           material={new THREE.MeshLambertMaterial({ color: bridge })}
         />
       </PE.Body>
@@ -62,7 +62,7 @@
 
       <SC.Mesh
         position={plank.position.toArray()}
-        geometry={new THREE.BoxBufferGeometry(0.4, 0.15, 1)}
+        geometry={new THREE.BoxGeometry(0.4, 0.15, 1)}
         material={new THREE.MeshLambertMaterial({
           color: bridge,
         })}

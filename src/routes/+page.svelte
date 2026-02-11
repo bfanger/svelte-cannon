@@ -1,3 +1,7 @@
+<script lang="ts">
+  import { resolve } from "$app/paths";
+</script>
+
 <div class="container">
   <p>
     A declarative approach to setting up a
@@ -14,36 +18,36 @@
 
   <ul>
     <li>
-      <a href="jumpy-box">Jumpy Box</a>
+      <a href={resolve("/jumpy-box")}>Jumpy Box</a>
       <div class="description">
         A cube, a floor, some events, and maybe even a ball.
       </div>
     </li>
     <li>
-      <a href="pill-eater">Pill Eater</a>
+      <a href={resolve("/pill-eater")}>Pill Eater</a>
       <div class="description">
         Top down game where the yellow hero hunts for power pills.
       </div>
     </li>
     <li>
-      <a href="constraints/bridge">Bridge</a>
+      <a href={resolve("/constraints/bridge")}>Bridge</a>
       <div class="description">Example of using the LockConstraint</div>
     </li>
     <li>
-      <a href="constraints/double-pendulum">Double pendulum</a>
+      <a href={resolve("/constraints/double-pendulum")}>Double pendulum</a>
       <div class="description">
         Using the DistanceConstraint to "exhibit rich dynamic behavior -
         <a href="https://en.wikipedia.org/wiki/Double_pendulum">Wikipedia</a>"
       </div>
     </li>
     <li>
-      <a href="minimal">Minimal</a>
+      <a href={resolve("/minimal")}>Minimal</a>
       <div class="description">
         A ball that keeps falling (the Readme example)
       </div>
     </li>
     <li>
-      <a href="debugger">Debugger</a>
+      <a href={resolve("/debugger")}>Debugger</a>
       <div class="description">
         Using the cannon-es-debugger, depends on additional packages:<br />
         <a href="https://github.com/pmndrs/cannon-es-debugger">
@@ -53,7 +57,7 @@
       </div>
     </li>
     <li>
-      <a href="spring">Spring</a>
+      <a href={resolve("/spring")}>Spring</a>
       <div class="description">
         Box hanging on a spring
         <a href="https://pmndrs.github.io/cannon-es/examples/spring">
@@ -64,38 +68,44 @@
   </ul>
 </div>
 
-<style lang="scss">
+<style>
   :global(html) {
     font-size: 10px;
   }
 
   .container {
-    margin-left: auto;
-    margin-right: auto;
-    padding-top: 3.5rem;
     width: 56rem;
     max-width: 90%;
+    margin-right: auto;
+    margin-left: auto;
+    padding-top: 3.5rem;
+
     font-size: 1.6rem;
   }
+
   .github {
     margin-right: 0.5rem;
   }
+
   h2 {
-    font-weight: normal;
-    font-size: 2.6rem;
     margin-top: 4rem;
     margin-bottom: 1.2rem;
+    font-size: 2.6rem;
+    font-weight: normal;
   }
+
   ul {
     padding: 0;
     list-style: none;
   }
+
   li {
     margin-bottom: 1rem;
   }
+
   .description {
-    font-size: 1.4rem;
     margin-top: 0.2rem;
     margin-bottom: 0.8rem;
+    font-size: 1.4rem;
   }
 </style>

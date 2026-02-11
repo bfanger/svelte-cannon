@@ -12,7 +12,7 @@
   let width: number;
   let height: number;
 
-  $: renderer && renderer.setSize(width, height);
+  $: renderer?.setSize(width, height);
   $: if (camera) {
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
@@ -39,11 +39,8 @@
   });
 </script>
 
-<canvas
-  bind:this={canvas}
-  bind:clientWidth={width}
-  bind:clientHeight={height}
-/>
+<canvas bind:this={canvas} bind:clientWidth={width} bind:clientHeight={height}
+></canvas>
 
 <style>
   canvas {

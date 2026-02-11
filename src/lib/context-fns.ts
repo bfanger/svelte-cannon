@@ -18,15 +18,15 @@ export function getCannonContext(): CannonContext {
 }
 export function derivedBodies(
   idToBody: Readable<Record<string, Body>>,
-  targets: [string, string]
+  targets: [string, string],
 ): Readable<[Body, Body] | false>;
 export function derivedBodies(
   idToBody: Readable<Record<string, Body>>,
-  targets: string[]
+  targets: string[],
 ): Readable<Body[] | false>;
 export function derivedBodies(
   idToBody: Readable<Record<string, Body>>,
-  targets: string[]
+  targets: string[],
 ): Readable<Body[] | false> {
   return derived(idToBody, ($idToBody) => {
     console.warn("deprecated in favor of bodiesFor");
@@ -43,7 +43,7 @@ export function derivedBodies(
 }
 
 export function bodiesFor(
-  targets: string[]
+  targets: string[],
 ): Readable<Body[] | false> & { for(targets: string[]): void } {
   const input = writable(targets);
   let previous = targets.join("\n");
@@ -56,7 +56,7 @@ export function bodiesFor(
         previous = next;
       }
     },
-    targets
+    targets,
   );
   const { idToBody } = getCannonContext();
   const store = derived(
@@ -71,7 +71,7 @@ export function bodiesFor(
         bodies.push(body);
       }
       return bodies;
-    }
+    },
   );
   return {
     subscribe: store.subscribe,

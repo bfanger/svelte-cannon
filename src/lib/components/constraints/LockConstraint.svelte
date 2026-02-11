@@ -11,7 +11,11 @@
   const bodies = bodiesFor(targets);
   $: bodies.for(targets);
 
-  $: $bodies && sync($bodies, { maxForce });
+  $: {
+    if ($bodies) {
+      sync($bodies, { maxForce });
+    }
+  }
 
   let constraints: LockConstraint[] = [];
 
