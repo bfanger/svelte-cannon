@@ -5,12 +5,12 @@ Use [Svelte](https://svelte.dev/) components to build a [cannon-es](https://pmnd
 ## Installation
 
 ```sh
-npm install svelte-cannon   # or   yarn add svelte-cannon
+npm install svelte-cannon
 ```
 
 ## Usage
 
-This example uses [svelte-cubed](https://svelte-cubed.vercel.app/) to display the objects, but svelte-cannon is renderer engine agnostic.
+The examples use the deprecated [svelte-cubed](https://svelte-cubed.vercel.app/) for displaying the 3D objects, but svelte-cannon is renderer engine agnostic.
 
 ```svelte
 <script lang="ts">
@@ -113,18 +113,18 @@ Note: These id's not related the numerical id's of the cannon-es Bodies.
 ### Setup
 
 ```sh
-yarn install
-yarn dev
+pnpm install
+pnpm run dev
 ```
 
 ### Linting
 
 ```sh
-yarn lint  # or  npm run lint
+pnpm lint
 ```
 
 ### Build
 
 ```sh
-yarn package  # or  npm run package
+pnpm run package
 ```

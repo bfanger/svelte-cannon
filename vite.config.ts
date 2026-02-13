@@ -9,6 +9,6 @@ export default defineConfig({
     exclude: [...configDefaults.exclude, "package"],
   },
   build: {
-    // chunkSizeWarningLimit: 700,
+    chunkSizeWarningLimit: 700,
   },
 });

@@ -38,8 +38,15 @@
       "prettier --check"
     ]
   },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "svelte": "./dist/index.js"
+    }
+  },
   "peerDependencies": {
-    "cannon-es": "*"
+    "cannon-es": "*",
+    "svelte": "*"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",

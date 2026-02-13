@@ -13,7 +13,7 @@ export default ts.config(
       ".vercel",
       "build",
       "node_modules",
-      "package",
+      "dist",
       "vite.config.ts.timestamp-*.mjs",
     ],
   },
