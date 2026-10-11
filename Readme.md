@@ -61,7 +61,7 @@ This allows for reusing existing variables and reduces boilerplate.
 
 ## Two way binding caveats
 
-1. `bind:property=` for 3D vectors only works when an `CANNON.Vec3` object is passed.
+1. `bind:property=` for 3D vectors only works when a `CANNON.Vec3` object is passed.
 
 This restriction allows svelte-cannon to detect which properties you're interested in.
 Due to the nature of physics engines a lot of properties could change every on frame, recalculating the `velocity` of the ground plane would be wasteful.
@@ -69,37 +69,33 @@ Due to the nature of physics engines a lot of properties could change every on f
 2. When the body is awake `bind:property=` will trigger updates, but the value might not have changed.
 
 Syncing position the THREE.Mesh is a fast operation.
-`$: mesh.position.copy(position);` ( CANNON.Vec3 is compatible with THREE.Vector3 )
-Creating shadow values, recalculating and checking and for changes would be overhead.
+`$effect(() => mesh.position.copy(position));` ( Vec3State is compatible with THREE.Vector3 )
+Creating shadow values, recalculating and checking for changes would be overhead.
 
-## Imprecise stores
+## Imprecise Vec3State
 
-`writableVec3` creates store, but when you're setting the value with a CANNON.Vec3 that has roughly the same value it won't trigger an update.
+`Vec3State` is a reactive 3D vector, when a physics simulation state is roughly the same as the current state (within `precision`) it won't trigger an update.
 
 ```svelte
 <script>
   import * as PE from "svelte-cannon";
   import * as SC from "svelte-cubed";
 
-  const position = PE.writableVec3(0, 4, 0);
+  const position = new PE.Vec3State(0, 4, 0);
   position.precision = 0.001; // 1mm (default)
 </script>
 
-<PE.Body bind:position={$position} />
-<SC.Mesh position={$position.toArray()} />
+<PE.Body {position} />
+<SC.Mesh position={position.toArray()} />
 ```
 
-This allows you to prevent resending values to the renderer that haven't changed.
+This allows you to prevent resending values to the renderer that haven't changed meaningfully.
 
-From a usage perspective it acts as a `writable(new Vec3(0, 4, 0))` but also allows shorthand notations:
+The `x`, `y` and `z` properties are reactive `$state` values, so you can read and set them directly:
 
 - `position.set(1, 2, 3)`
-- `position.set(new CANNON.Vec3(1, 2, 3))`
-- `$position = new CANNON.Vec3(1, 2, 3)`
-- `$position = new THREE.Vector3(1, 2, 3)`
-- `$position = {x: 1, y: 2, z: 3}`
-- `$position = [1, 2, 3]`
-- `$position.x = 1; $position.x = 2; $position.x = 3;`
+- `position.x = 1; position.y = 2; position.z = 3;`
+- `position.toArray()` → `[1, 2, 3]`
 
 ## Forces and Constraints
 

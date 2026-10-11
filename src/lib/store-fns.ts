@@ -10,6 +10,9 @@ type Vec3Writable = Writable<Vec3> & {
 export function writableVec3(): Vec3Writable;
 export function writableVec3(vec3: Vec3Like): Vec3Writable;
 export function writableVec3(x: number, y: number, z: number): Vec3Writable;
+/**
+ * @deprecated in favor of Vec3State
+ */
 export function writableVec3(
   x?: Vec3Like | number,
   y?: number,

@@ -1,24 +1,23 @@
 <script lang="ts">
-  import * as CANNON from "cannon-es";
   import * as PE from "#lib";
   import * as THREE from "three";
   import * as SC from "svelte-cubed";
   import Fab from "../../site/Fab.svelte";
 
-  const boxPosition = PE.writableVec3(0, 5, 0);
-  const boxRotation = PE.writableVec3();
+  const boxPosition = new PE.Vec3State(0, 5, 0);
+  const boxRotation = new PE.Vec3State();
 
-  let boxVelocityY = 0;
-  let ballPosition = new CANNON.Vec3(2, 2, 0);
-  let ballVelocity = CANNON.Vec3.ZERO;
+  let boxVelocityY = $state(0);
+  const ballPosition = new PE.Vec3State();
+  const ballVelocity = new PE.Vec3State();
 
-  let color = 0xbababa;
-  let visible = false;
+  let color = $state(0xbababa);
+  let visible = $state(false);
 
   function onClick() {
     visible = true;
     ballPosition.set(0.55, 3, 0);
-    ballVelocity = CANNON.Vec3.ZERO;
+    ballVelocity.set(0, 0, 0);
   }
 
   function onCollide() {
@@ -59,8 +58,8 @@
     <!-- Cube -->
     <PE.Body
       mass={5}
-      bind:position={$boxPosition}
-      bind:rotation={$boxRotation}
+      position={boxPosition}
+      rotation={boxRotation}
       velocity={[0, boxVelocityY, 0]}
       on:collide={onCollide}
       on:sleep={onSleep}
@@ -69,8 +68,8 @@
       <PE.Box size={[0.5, 0.5, 0.5]} />
     </PE.Body>
     <SC.Mesh
-      position={$boxPosition.toArray()}
-      rotation={$boxRotation.toArray()}
+      position={boxPosition.toArray()}
+      rotation={boxRotation.toArray()}
       geometry={new THREE.BoxGeometry()}
       material={new THREE.MeshPhongMaterial({ color })}
       castShadow
@@ -78,7 +77,7 @@
 
     {#if visible}
       <!-- Ball -->
-      <PE.Body mass={2} bind:position={ballPosition} velocity={ballVelocity}>
+      <PE.Body mass={2} position={ballPosition} velocity={ballVelocity}>
         <PE.Sphere radius={0.2} />
       </PE.Body>
       <SC.Mesh

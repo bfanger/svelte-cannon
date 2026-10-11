@@ -28,22 +28,22 @@
     }
   });
 
-  const position = untrack(() => PE.writableVec3(-x, -y, -0.8));
-  const rotation = PE.writableVec3();
+  const position = untrack(() => new PE.Vec3State(-x, -y, -0.8));
+  const rotation = new PE.Vec3State();
 </script>
 
 <PE.Body
   mass={0.3}
-  bind:position={$position}
-  bind:rotation={$rotation}
+  {position}
+  {rotation}
   type={weak ? CANNON.Body.DYNAMIC : CANNON.Body.KINEMATIC}
 >
   <PE.Box size={[0.5, 0.5, 0.8]} />
 </PE.Body>
 
 <SC.Mesh
-  position={$position.toArray()}
-  rotation={$rotation.toArray()}
+  position={position.toArray()}
+  rotation={rotation.toArray()}
   geometry={new THREE.BoxGeometry(1, 1, 1.6)}
   material={new THREE.MeshLambertMaterial({
     color: color.current,

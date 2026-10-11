@@ -8,8 +8,8 @@
     body?: CANNON.Body;
   };
   let { body = $bindable() }: Props = $props();
-  const position = PE.writableVec3(-7, -5, -1);
-  const rotation = PE.writableVec3();
+  const position = new PE.Vec3State(-7, -5, -1);
+  const rotation = new PE.Vec3State();
   let velocity = $state(CANNON.Vec3.ZERO);
   const dpad = PE.createDpad();
   const force = new CANNON.Vec3();
@@ -38,8 +38,8 @@
 <PE.Body
   bind:body
   mass={50}
-  bind:position={$position}
-  bind:rotation={$rotation}
+  {position}
+  {rotation}
   bind:velocity
   linearDamping={0.8}
 >
@@ -47,8 +47,8 @@
 </PE.Body>
 
 <SC.Mesh
-  position={$position.toArray()}
-  rotation={$rotation.toArray()}
+  position={position.toArray()}
+  rotation={rotation.toArray()}
   geometry={new THREE.OctahedronGeometry(0.4, 2)}
   material={new THREE.MeshLambertMaterial({ color: 0xdfd703 })}
   castShadow

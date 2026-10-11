@@ -10,6 +10,7 @@
   import { forwardEvents, onPostStep } from "../lifecycle-fns";
   import { toVec3, toQuaternion, quaternionToEuler } from "../conversion-fns";
   import { syncVec3, syncId, syncQuaternion } from "../sync-fns";
+  import Vec3State from "#lib/Vec3State.svelte.ts";
 
   export let id: string | undefined = undefined;
   export let collisionFilterGroup = 1;
@@ -96,23 +97,50 @@
 
   forwardEvents(body, "wakeup", "sleepy", "sleep", "collide");
   function sync() {
-    if (position instanceof Vec3) {
+    if (position instanceof Vec3State) {
+      position.syncWrite(body.position);
+    } else if (position instanceof Vec3) {
       position = body.position;
     }
-    if (velocity instanceof Vec3) {
+    if (velocity instanceof Vec3State) {
+      velocity.syncWrite(body.velocity);
+    } else if (velocity instanceof Vec3) {
       velocity = body.velocity;
     }
     if (quaternion instanceof Quaternion) {
       quaternion = body.quaternion;
+    } else if (rotation instanceof Vec3State) {
+      quaternionToEuler(body.quaternion, skipRotationRef.euler);
+      skipRotationRef.skip = true;
+      rotation.syncWrite(skipRotationRef.euler);
     } else if (rotation instanceof Vec3) {
       quaternionToEuler(body.quaternion, skipRotationRef.euler);
       skipRotationRef.skip = true;
       rotation = skipRotationRef.euler;
     }
-    if (angularVelocity instanceof Vec3) {
+    if (angularVelocity instanceof Vec3State) {
+      angularVelocity.syncWrite(body.angularVelocity);
+    } else if (angularVelocity instanceof Vec3) {
       angularVelocity = body.angularVelocity;
     }
   }
+  onMount(() => {
+    if (position instanceof Vec3State) {
+      return position.syncRead((x, y, z) => body.position.set(x, y, z));
+    }
+  });
+  onMount(() => {
+    if (velocity instanceof Vec3State) {
+      return velocity.syncRead((x, y, z) => body.velocity.set(x, y, z));
+    }
+  });
+  onMount(() => {
+    if (rotation instanceof Vec3State) {
+      return rotation.syncRead((x, y, z) =>
+        body.quaternion.setFromEuler(x, y, z, "XYZ"),
+      );
+    }
+  });
 
   onMount(() => {
     context.world.addBody(body);
