@@ -3,25 +3,32 @@
   import * as PE from "#lib";
   import * as THREE from "three";
   import * as SC from "svelte-cubed";
-  import { tweened } from "svelte/motion";
+  import { Tween } from "svelte/motion";
+  import { untrack } from "svelte";
 
-  export let x: number;
-  export let y: number;
-  export let weak = false;
-  const color = tweened(new THREE.Color(0x1f1a9d), {
+  type Props = {
+    x: number;
+    y: number;
+    weak?: boolean;
+  };
+  let { x, y, weak = false }: Props = $props();
+
+  const color = new Tween(new THREE.Color(0x1f1a9d), {
     interpolate(from, to) {
       return (t) => {
-        return from.lerp(to, t);
+        return from.lerp(to, t).clone();
       };
     },
   });
-  $: if (weak) {
-    void color.set(new THREE.Color(0xac0cdf), { duration: 0 }).then(() => {
-      void color.set(new THREE.Color(0x1f1a9d), { duration: 2000 });
-    });
-  }
+  $effect(() => {
+    if (weak) {
+      void color
+        .set(new THREE.Color(0xac0cdf), { duration: 0 })
+        .then(() => color.set(new THREE.Color(0x1f1a9d), { duration: 2000 }));
+    }
+  });
 
-  const position = PE.writableVec3(-x, -y, -0.8);
+  const position = untrack(() => PE.writableVec3(-x, -y, -0.8));
   const rotation = PE.writableVec3();
 </script>
 
@@ -39,7 +46,7 @@
   rotation={$rotation.toArray()}
   geometry={new THREE.BoxGeometry(1, 1, 1.6)}
   material={new THREE.MeshLambertMaterial({
-    color: $color,
+    color: color.current,
   })}
   castShadow
   receiveShadow

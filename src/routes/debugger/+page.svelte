@@ -2,12 +2,12 @@
   import * as CANNON from "cannon-es";
   import * as PE from "#lib";
   import Fab from "../../site/Fab.svelte";
-  import DebugCanvas from "../../site/ThreeRenderer.svelte";
+  import ThreeRenderer from "../../site/ThreeRenderer.svelte";
   import Debugger from "#lib/debugger.js";
   import type { Scene } from "three";
 
-  let position = new CANNON.Vec3(0, 4, 0);
-  let scene: Scene;
+  let position = $state(new CANNON.Vec3(0, 4, 0));
+  let scene = $state<Scene>()!;
 </script>
 
 <PE.World gravity={[0, -9.81, 0]}>
@@ -23,7 +23,11 @@
     <PE.Plane />
   </PE.Body>
   <Debugger {scene} />
-  <DebugCanvas bind:scene />
+  <ThreeRenderer
+    setScene={(value) => {
+      scene = value;
+    }}
+  />
 </PE.World>
 
 <Fab

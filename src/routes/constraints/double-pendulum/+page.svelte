@@ -8,13 +8,13 @@
 
   const linearDamping = 0.06;
 
-  let jointPosition = new CANNON.Vec3(1, -0.5, 0);
-  let penPosition = new CANNON.Vec3(1, -1.5, 0);
+  let jointPosition = $state(new CANNON.Vec3(1, -0.5, 0));
+  let penPosition = $state(new CANNON.Vec3(1, -1.5, 0));
+  let magnet = $state<false | { x: number; y: number }>(false);
+  let onPostStep = $state(() => undefined);
+
   let trailsCanvas: HTMLCanvasElement;
   let sticksCanvas: HTMLCanvasElement;
-  let magnet: false | { x: number; y: number } = false;
-
-  let onPostStep: () => void | undefined;
 
   function scale(value: number) {
     return value * 250 + 512;
@@ -133,12 +133,18 @@
   width="1024"
   height="1024"
   class:magnet
-  on:mousedown|preventDefault={onDown}
-  on:mousemove={onMove}
-  on:mouseup={onUp}
-  on:touchstart|preventDefault={onDown}
-  on:touchmove={onMove}
-  on:touchend={onUp}
+  onmousedown={(e) => {
+    e.preventDefault();
+    onDown(e);
+  }}
+  onmousemove={onMove}
+  onmouseup={onUp}
+  ontouchstart={(e) => {
+    e.preventDefault();
+    onDown(e);
+  }}
+  ontouchmove={onMove}
+  ontouchend={onUp}
 ></canvas>
 <PE.World gravity={[0, 9.81, 0]} on:postStep={onPostStep}>
   <PE.DistanceConstraint for={["anchor", "joint", "pen"]} distance={1} />

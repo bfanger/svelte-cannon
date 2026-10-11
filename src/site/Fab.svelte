@@ -1,5 +1,8 @@
 <script lang="ts">
-  export let href: string;
+  type Props = {
+    href: string;
+  };
+  let { href }: Props = $props();
 </script>
 
 <!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->

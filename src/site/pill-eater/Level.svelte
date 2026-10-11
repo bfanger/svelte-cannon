@@ -41,7 +41,7 @@
     {#if type === 8}
       <Wall {x} {y} {weak} />
     {:else if type === 5 && !weak}
-      <PowerPill {x} {y} on:collide={onPowerUp} />
+      <PowerPill {x} {y} oncollide={onPowerUp} />
     {:else if type === 2}
       <Pill {x} {y} />
     {/if}

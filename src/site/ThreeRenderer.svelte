@@ -4,19 +4,29 @@
   import { onPostStep } from "#lib/lifecycle-fns.js";
   import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
-  export const scene = new THREE.Scene();
+  type Props = {
+    setScene: (scene: THREE.Scene) => void;
+  };
+  let { setScene }: Props = $props();
 
   let camera: THREE.PerspectiveCamera;
   let canvas: HTMLCanvasElement;
-  let renderer: THREE.WebGLRenderer;
-  let width: number;
-  let height: number;
+  let renderer = $state<THREE.WebGLRenderer>();
+  let width = $state(1);
+  let height = $state(1);
 
-  $: renderer?.setSize(width, height);
-  $: if (camera) {
-    camera.aspect = width / height;
-    camera.updateProjectionMatrix();
-  }
+  const scene = new THREE.Scene();
+  $effect.pre(() => setScene(scene));
+
+  $effect(() => {
+    renderer?.setSize(width, height);
+  });
+  $effect(() => {
+    if (camera) {
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+    }
+  });
 
   onMount(() => {
     renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
@@ -31,11 +41,11 @@
     controls.enableDamping = true;
 
     return () => {
-      renderer.dispose();
+      renderer?.dispose();
     };
   });
   onPostStep(() => {
-    renderer.render(scene, camera);
+    renderer?.render(scene, camera);
   });
 </script>
 

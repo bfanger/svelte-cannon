@@ -3,10 +3,13 @@
   import * as THREE from "three";
   import * as SC from "svelte-cubed";
 
-  export let x: number;
-  export let y: number;
+  type Props = {
+    x: number;
+    y: number;
+  };
+  let { x, y }: Props = $props();
 
-  let hit = false;
+  let hit = $state(false);
 
   function onHit() {
     hit = true;

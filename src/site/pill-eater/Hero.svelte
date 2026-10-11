@@ -4,13 +4,19 @@
   import * as THREE from "three";
   import * as SC from "svelte-cubed";
 
-  export let body: CANNON.Body = undefined as any;
+  type Props = {
+    body?: CANNON.Body;
+  };
+  let { body = $bindable() }: Props = $props();
   const position = PE.writableVec3(-7, -5, -1);
   const rotation = PE.writableVec3();
-  let velocity = CANNON.Vec3.ZERO;
+  let velocity = $state(CANNON.Vec3.ZERO);
   const dpad = PE.createDpad();
   const force = new CANNON.Vec3();
   PE.onPreStep(() => {
+    if (!body) {
+      throw new Error("bind: failed");
+    }
     force.setZero();
     if ($dpad.up) {
       force.y = 1;
