@@ -10,7 +10,6 @@
   let { body = $bindable() }: Props = $props();
   const position = new PE.Vec3State(-7, -5, -1);
   const rotation = new PE.Vec3State();
-  let velocity = $state(CANNON.Vec3.ZERO);
   const dpad = PE.createDpad();
   const force = new CANNON.Vec3();
   PE.onPreStep(() => {
@@ -35,14 +34,7 @@
   });
 </script>
 
-<PE.Body
-  bind:body
-  mass={50}
-  {position}
-  {rotation}
-  bind:velocity
-  linearDamping={0.8}
->
+<PE.Body bind:body mass={50} {position} {rotation} linearDamping={0.8}>
   <PE.Sphere radius={0.4} />
 </PE.Body>
 

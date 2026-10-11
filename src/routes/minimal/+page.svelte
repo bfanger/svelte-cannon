@@ -1,15 +1,14 @@
 <script lang="ts">
-  import * as CANNON from "cannon-es";
   import * as PE from "#lib";
   import * as THREE from "three";
   import * as SC from "svelte-cubed";
   import Fab from "../../site/Fab.svelte";
 
-  let position = new CANNON.Vec3(0, 4, 0);
+  const position = new PE.Vec3State(0, 4, 0);
 </script>
 
 <PE.World gravity={[0, -9.81, 0]}>
-  <PE.Body mass={1} bind:position>
+  <PE.Body mass={1} {position}>
     <PE.Sphere radius={1} />
   </PE.Body>
 </PE.World>
@@ -17,7 +16,7 @@
 <SC.Canvas>
   <SC.PerspectiveCamera position={[0, 2, 10]} />
   <SC.Mesh
-    position={[position.x, position.y, position.z]}
+    position={position.toArray()}
     geometry={new THREE.SphereGeometry(1)}
   />
 </SC.Canvas>

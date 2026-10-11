@@ -24,7 +24,7 @@ The examples use the deprecated [svelte-cubed](https://svelte-cubed.vercel.app/)
   import * as THREE from "three";
   import * as SC from "svelte-cubed";
 
-  let position = new PE.Vec3(0, 4, 0);
+  const position = new PE.Vec3State(0, 4, 0);
 </script>
 
 <PE.World gravity={[0, -9.81, 0]}>
