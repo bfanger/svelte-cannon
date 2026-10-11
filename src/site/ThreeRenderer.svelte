@@ -5,23 +5,24 @@
   import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
   type Props = {
-    setScene: (scene: THREE.Scene) => void;
+    scene?: THREE.Scene;
   };
-  let { setScene }: Props = $props();
+  // eslint-disable-next-line no-useless-assignment
+  let { scene: sceneProp = $bindable() }: Props = $props();
 
-  let camera: THREE.PerspectiveCamera;
-  let canvas: HTMLCanvasElement;
   let renderer = $state<THREE.WebGLRenderer>();
   let width = $state(1);
   let height = $state(1);
 
+  let camera: THREE.PerspectiveCamera;
+  let canvas: HTMLCanvasElement;
+
   const scene = new THREE.Scene();
-  $effect.pre(() => setScene(scene));
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-useless-assignment
+  sceneProp = scene;
 
   $effect(() => {
     renderer?.setSize(width, height);
-  });
-  $effect(() => {
     if (camera) {
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
@@ -55,7 +56,7 @@
 <style>
   canvas {
     position: absolute;
-    width: 100%;
-    height: 100%;
+    width: 100% !important;
+    height: 100% !important;
   }
 </style>

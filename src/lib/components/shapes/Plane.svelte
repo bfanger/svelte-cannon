@@ -11,12 +11,7 @@
     material?: Material;
     children?: Snippet;
   };
-  let {
-    offset = undefined,
-    orientation = undefined,
-    material = undefined,
-    children = undefined,
-  }: Props = $props();
+  let { offset, orientation, material, children }: Props = $props();
 
   const shape = new Plane();
 </script>

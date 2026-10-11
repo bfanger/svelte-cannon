@@ -13,13 +13,7 @@
     material?: Material;
     children?: Snippet;
   };
-  let {
-    shape,
-    offset = undefined,
-    orientation = undefined,
-    material = undefined,
-    children = undefined,
-  }: Props = $props();
+  let { shape, offset, orientation, material, children }: Props = $props();
 
   const context = getCannonContext();
 

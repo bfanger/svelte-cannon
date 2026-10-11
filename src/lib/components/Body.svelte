@@ -37,21 +37,21 @@
     angularFactor?: Vec3Like;
     isTrigger?: boolean;
     sleepState?: BodySleepState;
-    children?: Snippet;
     onwakeup?: (event: any) => void;
     onsleepy?: (event: any) => void;
     onsleep?: (event: any) => void;
     oncollide?: (event: any) => void;
+    children?: Snippet;
   };
   let {
     // eslint-disable-next-line no-useless-assignment
     body: bodyProp = $bindable(),
-    id = undefined,
+    id,
     collisionFilterGroup = 1,
     collisionFilterMask = -1,
     collisionResponse = true,
-    position = $bindable(),
-    velocity = $bindable(),
+    position,
+    velocity,
     mass = 0,
     material = null,
     linearDamping = 0.01,
@@ -59,20 +59,20 @@
     allowSleep = true,
     sleepSpeedLimit = 0.1,
     sleepTimeLimit = 1,
-    rotation = $bindable(), // Euler
-    quaternion = undefined,
-    angularVelocity = undefined,
+    rotation, // Euler
+    quaternion,
+    angularVelocity,
     fixedRotation = false,
     angularDamping = 0.01,
-    linearFactor = undefined,
-    angularFactor = undefined,
+    linearFactor,
+    angularFactor,
     isTrigger = false,
-    sleepState = undefined,
-    children = undefined,
-    onwakeup = undefined,
-    onsleepy = undefined,
-    onsleep = undefined,
-    oncollide = undefined,
+    sleepState,
+    onwakeup,
+    onsleepy,
+    onsleep,
+    oncollide,
+    children,
   }: Props = $props();
 
   const body = untrack(
@@ -124,28 +124,6 @@
       syncVec3(body.velocity, velocity);
     }
   });
-  $effect(() => {
-    body.collisionFilterGroup = collisionFilterGroup;
-    body.collisionFilterMask = collisionFilterMask;
-    body.collisionResponse = collisionResponse;
-  });
-  $effect(() => {
-    body.material = material;
-  });
-  $effect(() => {
-    body.mass = mass;
-    body.linearDamping = linearDamping;
-  });
-  $effect(() => {
-    if (type) {
-      body.type = type;
-    }
-  });
-  $effect(() => {
-    body.allowSleep = allowSleep;
-    body.sleepSpeedLimit = sleepSpeedLimit;
-    body.sleepTimeLimit = sleepTimeLimit;
-  });
   const skipRotationRef = { skip: false, euler: new Vec3() };
   $effect(() => {
     if (rotation instanceof Vec3State) {
@@ -163,20 +141,29 @@
     syncVec3(body.angularVelocity, angularVelocity);
   });
   $effect(() => {
-    body.fixedRotation = fixedRotation;
-  });
-  $effect(() => {
-    body.angularDamping = angularDamping;
-  });
-  $effect(() => {
     syncVec3(body.linearFactor, linearFactor);
   });
   $effect(() => {
     syncVec3(body.angularFactor, angularFactor);
   });
   $effect(() => {
+    body.collisionFilterGroup = collisionFilterGroup;
+    body.collisionFilterMask = collisionFilterMask;
+    body.collisionResponse = collisionResponse;
+    body.material = material;
+    body.mass = mass;
+    body.linearDamping = linearDamping;
+    if (type) {
+      body.type = type;
+    }
+    body.allowSleep = allowSleep;
+    body.sleepSpeedLimit = sleepSpeedLimit;
+    body.sleepTimeLimit = sleepTimeLimit;
+    body.fixedRotation = fixedRotation;
+    body.angularDamping = angularDamping;
     body.isTrigger = isTrigger;
   });
+
   $effect(() => {
     if (sleepState !== undefined && sleepState !== body.sleepState) {
       if (sleepState === Body.AWAKE) {
@@ -196,13 +183,9 @@
   function sync() {
     if (position instanceof Vec3State) {
       position._fromPhysics(body.position);
-    } else if (position instanceof Vec3) {
-      position = body.position;
     }
     if (velocity instanceof Vec3State) {
       velocity._fromPhysics(body.velocity);
-    } else if (velocity instanceof Vec3) {
-      velocity = body.velocity;
     }
     if (quaternion instanceof Quaternion) {
       quaternion = body.quaternion;
@@ -210,10 +193,6 @@
       quaternionToEuler(body.quaternion, skipRotationRef.euler);
       skipRotationRef.skip = true;
       rotation._fromPhysics(skipRotationRef.euler);
-    } else if (rotation instanceof Vec3) {
-      quaternionToEuler(body.quaternion, skipRotationRef.euler);
-      skipRotationRef.skip = true;
-      rotation = skipRotationRef.euler;
     }
     if (angularVelocity instanceof Vec3State) {
       angularVelocity._fromPhysics(body.angularVelocity);

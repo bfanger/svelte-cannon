@@ -24,17 +24,17 @@
     children?: Snippet;
   };
   let {
-    gravity = undefined,
+    gravity,
     allowSleep = false,
-    broadphase = undefined,
-    solver = undefined,
+    broadphase,
+    solver,
     quatNormalizeFast = false,
     quatNormalizeSkip = 0,
-    preStep = undefined,
-    postStep = undefined,
-    bodyAdded: addBody = undefined,
-    bodyRemoved: removeBody = undefined,
-    children = undefined,
+    preStep,
+    postStep,
+    bodyAdded: addBody,
+    bodyRemoved: removeBody,
+    children,
   }: Props = $props();
 
   export const world = untrack(

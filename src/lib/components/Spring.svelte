@@ -23,10 +23,10 @@
     restLength = 1,
     stiffness = 100,
     damping = 1,
-    localAnchorA = undefined,
-    localAnchorB = undefined,
-    worldAnchorA = undefined,
-    worldAnchorB = undefined,
+    localAnchorA,
+    localAnchorB,
+    worldAnchorA,
+    worldAnchorB,
   }: Props = $props();
   const ctx = getCannonContext();
 

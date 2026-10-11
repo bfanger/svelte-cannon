@@ -17,38 +17,32 @@
     init?: (event: DebugEvent) => void;
     update?: (event: DebugEvent) => void;
   };
-  let {
-    scene,
-    color = 0x00ff00,
-    scale = 1,
-    init = undefined,
-    update = undefined,
-  }: Props = $props();
+  let { scene, color = 0x00ff00, scale = 1, init, update }: Props = $props();
 
   const ctx = getCannonContext();
 
-  let listener: (() => void) | undefined;
+  let debugUpdate = $derived.by(() => {
+    if (!scene) {
+      return undefined;
+    }
+    return CannonDebugger(scene, ctx.world, {
+      color,
+      scale,
+      onInit(body, mesh, shape) {
+        init?.({ body, mesh, shape });
+      },
+      onUpdate(body, mesh, shape) {
+        update?.({ body, mesh, shape });
+      },
+    }).update;
+  });
   $effect(() => {
+    const listener = debugUpdate;
     if (listener) {
-      ctx.world.removeEventListener("postStep", listener);
-    }
-    if (scene) {
-      listener = CannonDebugger(scene, ctx.world, {
-        color,
-        scale,
-        onInit(body, mesh, shape) {
-          init?.({ body, mesh, shape });
-        },
-        onUpdate(body, mesh, shape) {
-          update?.({ body, mesh, shape });
-        },
-      }).update;
-      ctx.world.addEventListener("postStep", listener);
-    }
-    return () => {
-      if (listener) {
+      ctx.world.addEventListener("postStep", debugUpdate);
+      return () => {
         ctx.world.removeEventListener("postStep", listener);
-      }
-    };
+      };
+    }
   });
 </script>

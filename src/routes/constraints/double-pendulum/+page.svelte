@@ -8,8 +8,8 @@
 
   const linearDamping = 0.06;
 
-  let jointPosition = $state(new CANNON.Vec3(1, -0.5, 0));
-  let penPosition = $state(new CANNON.Vec3(1, -1.5, 0));
+  const jointPosition = new PE.Vec3State(1, -0.5, 0);
+  const penPosition = new PE.Vec3State(1, -1.5, 0);
   let magnet = $state<false | { x: number; y: number }>(false);
   let postStep = $state(() => undefined);
 
@@ -31,7 +31,11 @@
     ctx.lineCap = "round";
 
     const start = Date.now();
-    const previous = penPosition.clone();
+    const previous = new CANNON.Vec3(
+      penPosition.x,
+      penPosition.y,
+      penPosition.z,
+    );
     postStep = () => {
       if (!ctx) {
         return;
@@ -50,7 +54,7 @@
         ctx.lineTo(scale(penPosition.x), scale(penPosition.y));
         ctx.stroke();
       }
-      previous.copy(penPosition);
+      previous.set(penPosition.x, penPosition.y, penPosition.z);
 
       overlayCtx.clearRect(0, 0, 1024, 1024);
       overlayCtx.beginPath();
@@ -149,10 +153,10 @@
 <PE.World gravity={[0, 9.81, 0]} {postStep}>
   <PE.DistanceConstraint for={["anchor", "joint", "pen"]} distance={1} />
   <PE.Body id="anchor" mass={0} position={[0, -0.5, 0]} />
-  <PE.Body id="joint" mass={1} {linearDamping} bind:position={jointPosition}>
+  <PE.Body id="joint" mass={1} {linearDamping} position={jointPosition}>
     <PE.Sphere radius={0.2} />
   </PE.Body>
-  <PE.Body id="pen" mass={1} {linearDamping} bind:position={penPosition}>
+  <PE.Body id="pen" mass={1} {linearDamping} position={penPosition}>
     <PE.Sphere radius={0.2} />
   </PE.Body>
 

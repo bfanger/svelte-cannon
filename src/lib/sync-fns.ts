@@ -32,7 +32,6 @@ export function syncVec3(target: Vec3, value: Vec3Like | undefined): boolean {
   return true;
 }
 
-const euler = new Vec3();
 export function syncQuaternion(
   target: Quaternion,
   value: QuaternionLike | undefined,
@@ -54,19 +53,16 @@ export function syncQuaternion(
     ) {
       return;
     }
-    euler.copy(value);
     target.setFromEuler(value.x, value.y, value.z, "XYZ");
   } else if (Array.isArray(value)) {
     if (value.length === 4) {
       target.set(value[0], value[1], value[2], value[3]);
     } else {
-      euler.set(value[0], value[1], value[2]);
       target.setFromEuler(value[0], value[1], value[2], "XYZ");
     }
   } else if (typeof (value as Quaternion).w === "number") {
     target.set(value.x, value.y, value.z, (value as Quaternion).w);
   } else {
-    euler.set(value.x, value.y, value.z);
     target.setFromEuler(value.x, value.y, value.z, "XYZ");
   }
 }

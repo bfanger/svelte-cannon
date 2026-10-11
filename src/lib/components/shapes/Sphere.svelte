@@ -13,13 +13,7 @@
     material?: Material;
     children?: Snippet;
   };
-  let {
-    radius,
-    offset = undefined,
-    orientation = undefined,
-    material = undefined,
-    children = undefined,
-  }: Props = $props();
+  let { radius, offset, orientation, material, children }: Props = $props();
 
   const shape = untrack(() => new Sphere(radius));
 

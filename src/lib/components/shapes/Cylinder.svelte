@@ -20,10 +20,10 @@
     radiusBottom = 1,
     height = 1,
     numSegments = 8,
-    offset = undefined,
-    orientation = undefined,
-    material = undefined,
-    children = undefined,
+    offset,
+    orientation,
+    material,
+    children,
   }: Props = $props();
 
   const shape = $derived.by(

@@ -15,13 +15,7 @@
     material?: Material;
     children?: Snippet;
   };
-  let {
-    size,
-    offset = undefined,
-    orientation = undefined,
-    material = undefined,
-    children = undefined,
-  }: Props = $props();
+  let { size, offset, orientation, material, children }: Props = $props();
 
   const shape = untrack(() => new Box(toVec3(size)));
 

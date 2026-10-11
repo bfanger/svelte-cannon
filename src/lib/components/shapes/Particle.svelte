@@ -8,7 +8,7 @@
     offset?: Vec3Like;
     children?: Snippet;
   };
-  let { offset = undefined, children = undefined }: Props = $props();
+  let { offset, children }: Props = $props();
 
   const shape = new Particle();
 </script>

@@ -9,7 +9,7 @@
     constraint?: Constraint;
     constraints?: Constraint[];
   };
-  let { constraint = undefined, constraints = [] }: Props = $props();
+  let { constraint, constraints = [] }: Props = $props();
 
   const ctx = getCannonContext();
 
