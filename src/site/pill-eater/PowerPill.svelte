@@ -1,6 +1,6 @@
 <script lang="ts">
   import { tweened } from "svelte/motion";
-  import * as PE from "$lib/index";
+  import * as PE from "#lib";
   import * as THREE from "three";
   import * as SC from "svelte-cubed";
   import { onMount } from "svelte";

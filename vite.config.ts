@@ -1,9 +1,18 @@
+import { existsSync } from "node:fs";
+import adapter from "@sveltejs/adapter-static";
 import { sveltekit } from "@sveltejs/kit/vite";
 import devtoolsJson from "vite-plugin-devtools-json";
 import { defineConfig, configDefaults } from "vitest/config";
 
+const inDocker = existsSync("/.dockerenv");
+
 export default defineConfig({
-  plugins: [devtoolsJson(), sveltekit()],
+  plugins: [inDocker ? [] : devtoolsJson(), sveltekit({ adapter: adapter() })],
+  server: inDocker
+    ? { host: true, watch: { usePolling: true, interval: 1000 } }
+    : {
+        cors: { origin: "*" },
+      },
   css: { devSourcemap: true },
   test: {
     exclude: [...configDefaults.exclude, "package"],

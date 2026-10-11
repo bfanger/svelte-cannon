@@ -1,9 +1,9 @@
 <script lang="ts">
   import * as CANNON from "cannon-es";
-  import * as PE from "$lib/index";
+  import * as PE from "#lib";
   import Fab from "../../site/Fab.svelte";
   import DebugCanvas from "../../site/ThreeRenderer.svelte";
-  import Debugger from "$lib/debugger";
+  import Debugger from "#lib/debugger.js";
   import type { Scene } from "three";
 
   let position = new CANNON.Vec3(0, 4, 0);

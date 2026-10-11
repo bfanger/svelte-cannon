@@ -1,7 +1,7 @@
 <script lang="ts">
   import * as THREE from "three";
   import { onMount } from "svelte";
-  import { onPostStep } from "$lib/lifecycle-fns";
+  import { onPostStep } from "#lib/lifecycle-fns.js";
   import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
   export const scene = new THREE.Scene();

@@ -2,8 +2,7 @@ import type { World, Body, Shape } from "cannon-es";
 import type { Readable, Writable } from "svelte/store";
 
 export type Vec3Like =
-  | { x: number; y: number; z: number }
-  | [number, number, number];
+  { x: number; y: number; z: number } | [number, number, number];
 
 export type QuaternionLike =
   | { x: number; y: number; z: number; w: number }

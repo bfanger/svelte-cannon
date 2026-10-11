@@ -2,7 +2,7 @@
   // Real wolrd Inspiration: https://www.kiwico.com/us/store/dp/glowing-pendulum-project-kit/2012
 
   import * as CANNON from "cannon-es";
-  import * as PE from "$lib/index";
+  import * as PE from "#lib";
   import Fab from "../../../site/Fab.svelte";
   import { onMount } from "svelte";
 

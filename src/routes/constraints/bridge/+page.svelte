@@ -2,7 +2,7 @@
   import * as THREE from "three";
   import * as SC from "svelte-cubed";
   import * as CANNON from "cannon-es";
-  import * as PE from "$lib/index";
+  import * as PE from "#lib";
   import Fab from "../../../site/Fab.svelte";
 
   const bridge = new THREE.Color(0xfa4203);

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import * as PE from "$lib/index";
+  import * as PE from "#lib";
   import * as THREE from "three";
   import * as SC from "svelte-cubed";
   import Wall from "./Wall.svelte";

@@ -18,36 +18,36 @@
 
   <ul>
     <li>
-      <a href={resolve("/jumpy-box")}>Jumpy Box</a>
+      <a href={resolve("jumpy-box")}>Jumpy Box</a>
       <div class="description">
         A cube, a floor, some events, and maybe even a ball.
       </div>
     </li>
     <li>
-      <a href={resolve("/pill-eater")}>Pill Eater</a>
+      <a href={resolve("pill-eater")}>Pill Eater</a>
       <div class="description">
         Top down game where the yellow hero hunts for power pills.
       </div>
     </li>
     <li>
-      <a href={resolve("/constraints/bridge")}>Bridge</a>
+      <a href={resolve("constraints/bridge")}>Bridge</a>
       <div class="description">Example of using the LockConstraint</div>
     </li>
     <li>
-      <a href={resolve("/constraints/double-pendulum")}>Double pendulum</a>
+      <a href={resolve("constraints/double-pendulum")}>Double pendulum</a>
       <div class="description">
         Using the DistanceConstraint to "exhibit rich dynamic behavior -
         <a href="https://en.wikipedia.org/wiki/Double_pendulum">Wikipedia</a>"
       </div>
     </li>
     <li>
-      <a href={resolve("/minimal")}>Minimal</a>
+      <a href={resolve("minimal")}>Minimal</a>
       <div class="description">
         A ball that keeps falling (the Readme example)
       </div>
     </li>
     <li>
-      <a href={resolve("/debugger")}>Debugger</a>
+      <a href={resolve("debugger")}>Debugger</a>
       <div class="description">
         Using the cannon-es-debugger, depends on additional packages:<br />
         <a href="https://github.com/pmndrs/cannon-es-debugger">
@@ -57,7 +57,7 @@
       </div>
     </li>
     <li>
-      <a href={resolve("/spring")}>Spring</a>
+      <a href={resolve("spring")}>Spring</a>
       <div class="description">
         Box hanging on a spring
         <a href="https://pmndrs.github.io/cannon-es/examples/spring">

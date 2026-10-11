@@ -2,6 +2,12 @@
 
 Use [Svelte](https://svelte.dev/) components to build a [cannon-es](https://pmndrs.github.io/cannon-es/) physics simulation.
 
+In 2022 Scott Tolinski, from Syntax.fm made a [Svelte 3D tutorial series](https://levelup.video/tutorials/svelte-3d) , which contains a svelte-cubed chapter.
+
+## Not in active development
+
+For a more actively maintained project that also provides 3D physics for Svelte, Check out [Threlte and Rapier](https://threlte.xyz/docs/reference/rapier/getting-started/)
+
 ## Installation
 
 ```sh

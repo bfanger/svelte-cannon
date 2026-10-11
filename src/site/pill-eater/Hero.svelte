@@ -1,6 +1,6 @@
 <script lang="ts">
   import * as CANNON from "cannon-es";
-  import * as PE from "$lib/index";
+  import * as PE from "#lib";
   import * as THREE from "three";
   import * as SC from "svelte-cubed";
 
