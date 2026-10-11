@@ -1,7 +1,6 @@
 <script lang="ts">
   import * as THREE from "three";
   import * as SC from "svelte-cubed";
-  import * as CANNON from "cannon-es";
   import * as PE from "#lib";
   import Fab from "../../../site/Fab.svelte";
 
@@ -16,12 +15,13 @@
     .fill(null)
     .map((_, i) => ({
       id: `plank${i}`,
-      position: new CANNON.Vec3(0.5 * i - half, 1.5, 0),
+      position: new PE.Vec3State(0.5 * i - half, 1.5, 0),
     }));
+  const ids = planks.map((p) => p.id);
 </script>
 
 <PE.World gravity={[0, -1, 0]}>
-  <PE.LockConstraint for={planks.map((p) => p.id)} />
+  <PE.LockConstraint for={ids} />
 
   <SC.Canvas background={sky} {fog}>
     <SC.Mesh
@@ -56,7 +56,7 @@
     {/each}
 
     {#each planks as plank (plank.id)}
-      <PE.Body id={plank.id} bind:position={plank.position} mass={1}>
+      <PE.Body id={plank.id} position={plank.position} mass={1}>
         <PE.Box size={[0.2, 0.075, 0.5]} />
       </PE.Body>
 

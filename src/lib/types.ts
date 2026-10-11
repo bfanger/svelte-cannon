@@ -1,5 +1,4 @@
 import type { World, Body, Shape } from "cannon-es";
-import type { Writable } from "svelte/store";
 
 export type Vec3Like =
   { x: number; y: number; z: number } | [number, number, number];
@@ -14,7 +13,7 @@ export type CannonContext = {
   body?: Body;
   shape?: Shape;
   bodyToId: Map<Body, string>;
-  idToBody: Writable<Record<string, Body>>;
+  idToBody: Map<string, Body>;
 };
 
 export type Dpad = {

@@ -2,7 +2,7 @@ export * from "./types";
 export { default as Vec3State } from "./Vec3State.svelte";
 export { writableVec3, createDpad } from "./store-fns";
 export { onPreStep, onPostStep } from "./lifecycle-fns";
-export { getCannonContext, bodiesFor } from "./context-fns";
+export { getCannonContext, bodiesByIds } from "./context-fns";
 export { default as World } from "./components/World.svelte";
 export { default as Body } from "./components/Body.svelte";
 export { default as Material } from "./components/Material.svelte";

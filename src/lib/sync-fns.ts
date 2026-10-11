@@ -1,23 +1,22 @@
 import { Vec3, Quaternion, Body } from "cannon-es";
-import { get } from "svelte/store";
 import type { Vec3Like, QuaternionLike, CannonContext } from "./types";
+import { untrack } from "svelte";
 
 export function syncId(
   context: CannonContext,
   body: Body,
   id: string | undefined,
 ) {
-  const previous = context.bodyToId.get(body);
-  const $idToBody = get(context.idToBody);
+  const previous = untrack(() => context.bodyToId.get(body));
   if (previous) {
-    delete $idToBody[previous];
+    if (previous === id) {
+      return;
+    }
+    context.idToBody.delete(previous);
   }
   if (id) {
     context.bodyToId.set(body, id);
-    $idToBody[id] = body;
-  }
-  if (previous || id) {
-    context.idToBody.set($idToBody);
+    context.idToBody.set(id, body);
   }
 }
 

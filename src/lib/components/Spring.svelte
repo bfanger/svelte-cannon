@@ -1,43 +1,52 @@
 <script lang="ts">
   import { Spring } from "cannon-es";
-  import type { Body, SpringOptions } from "cannon-es";
+  import type { SpringOptions } from "cannon-es";
   import { onPostStep } from "../lifecycle-fns";
-  import { bodiesFor } from "../context-fns";
+  import { bodiesByIds, getCannonContext } from "../context-fns";
   import type { Vec3Like } from "../types";
   import { toVec3 } from "../conversion-fns";
 
-  export let forA: string;
-  export let forB: string;
-  export let restLength = 1;
-  export let stiffness = 100;
-  export let damping = 1;
-  export let localAnchorA: Vec3Like | undefined = undefined;
-  export let localAnchorB: Vec3Like | undefined = undefined;
-  export let worldAnchorA: Vec3Like | undefined = undefined;
-  export let worldAnchorB: Vec3Like | undefined = undefined;
+  type Props = {
+    forA: string;
+    forB: string;
+    restLength?: number;
+    stiffness?: number;
+    damping?: number;
+    localAnchorA?: Vec3Like;
+    localAnchorB?: Vec3Like;
+    worldAnchorA?: Vec3Like;
+    worldAnchorB?: Vec3Like;
+  };
+  let {
+    forA,
+    forB,
+    restLength = 1,
+    stiffness = 100,
+    damping = 1,
+    localAnchorA = undefined,
+    localAnchorB = undefined,
+    worldAnchorA = undefined,
+    worldAnchorB = undefined,
+  }: Props = $props();
+  const ctx = getCannonContext();
 
-  const bodies = bodiesFor([forA, forB]);
-  $: bodies.for([forA, forB]);
-
-  $: sync($bodies, {
-    restLength,
-    damping,
-    stiffness,
-    localAnchorA: toVec3(localAnchorA),
-    localAnchorB: toVec3(localAnchorB),
-    worldAnchorA: toVec3(worldAnchorA),
-    worldAnchorB: toVec3(worldAnchorB),
+  let bodies = $derived(bodiesByIds(ctx.idToBody, [forA, forB]));
+  let spring = $derived.by(() => {
+    if (!bodies) {
+      return undefined;
+    }
+    const options: SpringOptions = {
+      restLength,
+      stiffness,
+      damping,
+      localAnchorA: toVec3(localAnchorA),
+      localAnchorB: toVec3(localAnchorB),
+      worldAnchorA: toVec3(worldAnchorA),
+      worldAnchorB: toVec3(worldAnchorB),
+    };
+    return new Spring(bodies[0], bodies[1], options);
   });
 
-  let spring: Spring | undefined;
-
-  function sync(values: Body[] | false, options: SpringOptions) {
-    if (!values) {
-      spring = undefined;
-      return;
-    }
-    spring = new Spring(values[0], values[1], options);
-  }
   onPostStep(() => {
     if (spring) {
       spring.applyForce();

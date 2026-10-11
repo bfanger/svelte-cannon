@@ -231,12 +231,9 @@
       context.world.removeBody(body);
       if (id) {
         context.bodyToId.delete(body);
-        context.idToBody.update(($idToBody) => {
-          if ($idToBody[id] === body) {
-            delete $idToBody[id];
-          }
-          return $idToBody;
-        });
+        if (context.idToBody.get(id) === body) {
+          context.idToBody.delete(id);
+        }
       }
     };
   });

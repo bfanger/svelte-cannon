@@ -20,16 +20,15 @@ The examples use the deprecated [svelte-cubed](https://svelte-cubed.vercel.app/)
 
 ```svelte
 <script lang="ts">
-  import * as CANNON from "cannon-es";
   import * as PE from "svelte-cannon";
   import * as THREE from "three";
   import * as SC from "svelte-cubed";
 
-  let position = new CANNON.Vec3(0, 4, 0);
+  let position = new PE.Vec3(0, 4, 0);
 </script>
 
 <PE.World gravity={[0, -9.81, 0]}>
-  <PE.Body mass={1} bind:position>
+  <PE.Body mass={1} {position}>
     <PE.Sphere radius={1} />
   </PE.Body>
 </PE.World>
@@ -37,7 +36,7 @@ The examples use the deprecated [svelte-cubed](https://svelte-cubed.vercel.app/)
 <SC.Canvas>
   <SC.PerspectiveCamera position={[0, 2, 10]} />
   <SC.Mesh
-    position={[position.x, position.y, position.z]}
+    position={position.toArray()}
     geometry={new THREE.SphereGeometry(1)}
   />
 </SC.Canvas>
@@ -103,7 +102,7 @@ As bodies can have multiple constrains and forces can affect multiple bodies it 
 
 ```svelte
 <PE.Body id="anchor" position={[0, 3, 0]} />
-<PE.Body id="ball" mass={1} bind:position>...</PE.Body>
+<PE.Body id="ball" mass={1} {position}>...</PE.Body>
 
 <PE.Spring forA="anchor" forB="ball" stiffness={50} />
 ```

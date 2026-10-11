@@ -1,34 +1,31 @@
 <script lang="ts">
   import { LockConstraint } from "cannon-es";
   import type { Body } from "cannon-es";
-  import { bodiesFor } from "../../context-fns";
+  import { bodiesByIds, getCannonContext } from "../../context-fns";
   import Constraint from "../Constraint.svelte";
 
-  let targets: string[];
-  export { targets as for };
-  export let maxForce = 1e6;
+  type Props = {
+    for: string[];
+    maxForce?: number;
+  };
+  let { for: targets, maxForce = 1e6 }: Props = $props();
+  const ctx = getCannonContext();
 
-  const bodies = bodiesFor(targets);
-  $: bodies.for(targets);
-
-  $: {
-    if ($bodies) {
-      sync($bodies, { maxForce });
+  let bodies = $derived(bodiesByIds(ctx.idToBody, targets));
+  let constraints = $derived.by(() => {
+    if (!bodies) {
+      return [];
     }
-  }
-
-  let constraints: LockConstraint[] = [];
-
-  function sync(entries: Body[], options: { maxForce: number }) {
+    const lockConstraints: LockConstraint[] = [];
     let previous: Body | undefined;
-    constraints = [];
-    for (const body of entries) {
+    for (const body of bodies) {
       if (previous) {
-        constraints.push(new LockConstraint(previous, body, options));
+        lockConstraints.push(new LockConstraint(previous, body, { maxForce }));
       }
       previous = body;
     }
-  }
+    return lockConstraints;
+  });
 </script>
 
 <Constraint {constraints} />

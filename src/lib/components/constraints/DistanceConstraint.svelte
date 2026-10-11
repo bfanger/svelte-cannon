@@ -1,43 +1,34 @@
 <script lang="ts">
   import { DistanceConstraint } from "cannon-es";
   import type { Body } from "cannon-es";
-  import { bodiesFor } from "../../context-fns";
+  import { bodiesByIds, getCannonContext } from "../../context-fns";
   import Constraint from "../Constraint.svelte";
 
-  let targets: string[];
-  export { targets as for };
-  export let distance: number | undefined = undefined;
-  export let maxForce = 1e6;
+  type Props = {
+    for: string[];
+    distance?: number;
+    maxForce?: number;
+  };
+  let { for: targets, distance, maxForce = 1e6 }: Props = $props();
+  const ctx = getCannonContext();
 
-  const bodies = bodiesFor(targets);
-  $: bodies.for(targets);
-
-  $: {
-    if ($bodies) {
-      sync($bodies, { distance, maxForce });
+  let bodies = $derived(bodiesByIds(ctx.idToBody, targets));
+  let constraints = $derived.by(() => {
+    if (!bodies) {
+      return [];
     }
-  }
-
-  let constraints: DistanceConstraint[] = [];
-
-  function sync(
-    entries: Body[],
-    _: {
-      distance: number | undefined;
-      maxForce: number;
-    },
-  ) {
-    constraints = [];
+    const distanceConstraints: DistanceConstraint[] = [];
     let previous: Body | undefined;
-    for (const body of entries) {
+    for (const body of bodies) {
       if (previous) {
-        constraints.push(
+        distanceConstraints.push(
           new DistanceConstraint(previous, body, distance, maxForce),
         );
       }
       previous = body;
     }
-  }
+    return distanceConstraints;
+  });
 </script>
 
 <Constraint {constraints} />

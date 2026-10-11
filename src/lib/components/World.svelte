@@ -2,13 +2,13 @@
   import { World } from "cannon-es";
   import type { Body, Broadphase, Solver } from "cannon-es";
   import { onMount, setContext, untrack } from "svelte";
-  import { writable } from "svelte/store";
   import { setCannonContext } from "../context-fns";
   import { listenTo } from "../lifecycle-fns";
   import { toVec3 } from "../conversion-fns";
   import { syncVec3 } from "../sync-fns";
   import type { Vec3Like } from "../types";
   import type { Snippet } from "svelte";
+  import { SvelteMap } from "svelte/reactivity";
 
   type Props = {
     gravity?: Vec3Like;
@@ -66,7 +66,7 @@
   setCannonContext({
     world,
     bodyToId: new Map(),
-    idToBody: writable({}),
+    idToBody: new SvelteMap<string, Body>(),
   });
   setContext("cannon/world", world);
 
