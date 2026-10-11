@@ -4,106 +4,203 @@
    */
   import { Body, Vec3, Quaternion } from "cannon-es";
   import type { BodyType, BodySleepState, Material } from "cannon-es";
-  import { onMount } from "svelte";
+  import { onMount, untrack } from "svelte";
+  import type { Snippet } from "svelte";
   import { getCannonContext, setCannonContext } from "../context-fns";
   import type { QuaternionLike, Vec3Like } from "../types";
-  import { forwardEvents, onPostStep } from "../lifecycle-fns";
+  import { onPostStep, listenTo } from "../lifecycle-fns";
   import { toVec3, toQuaternion, quaternionToEuler } from "../conversion-fns";
   import { syncVec3, syncId, syncQuaternion } from "../sync-fns";
   import Vec3State from "#lib/Vec3State.svelte.ts";
 
-  export let id: string | undefined = undefined;
-  export let collisionFilterGroup = 1;
-  export let collisionFilterMask = -1;
-  export let collisionResponse = true;
-  export let position: Vec3Like | undefined = undefined;
-  export let velocity: Vec3Like | undefined = undefined;
-  export let mass = 0;
-  export let material: Material | null = null;
-  export let linearDamping = 0.01;
-  export let type: BodyType = mass <= 0.0 ? Body.STATIC : Body.DYNAMIC;
-  export let allowSleep = true;
-  export let sleepSpeedLimit = 0.1;
-  export let sleepTimeLimit = 1;
-  export let rotation: Vec3Like | undefined = undefined; // Euler
-  export let quaternion: QuaternionLike | undefined = undefined;
-  export let angularVelocity: Vec3Like | undefined = undefined;
-  export let fixedRotation = false;
-  export let angularDamping = 0.01;
-  export let linearFactor: Vec3Like | undefined = undefined;
-  export let angularFactor: Vec3Like | undefined = undefined;
-  export let isTrigger = false;
-  export let sleepState: BodySleepState | undefined = undefined;
+  type Props = {
+    body?: Body;
+    id?: string;
+    collisionFilterGroup?: number;
+    collisionFilterMask?: number;
+    collisionResponse?: boolean;
+    position?: Vec3Like;
+    velocity?: Vec3Like;
+    mass?: number;
+    material?: Material | null;
+    linearDamping?: number;
+    type?: BodyType;
+    allowSleep?: boolean;
+    sleepSpeedLimit?: number;
+    sleepTimeLimit?: number;
+    rotation?: Vec3Like; // Euler
+    quaternion?: QuaternionLike;
+    angularVelocity?: Vec3Like;
+    fixedRotation?: boolean;
+    angularDamping?: number;
+    linearFactor?: Vec3Like;
+    angularFactor?: Vec3Like;
+    isTrigger?: boolean;
+    sleepState?: BodySleepState;
+    children?: Snippet;
+    onwakeup?: (event: any) => void;
+    onsleepy?: (event: any) => void;
+    onsleep?: (event: any) => void;
+    oncollide?: (event: any) => void;
+  };
+  let {
+    // eslint-disable-next-line no-useless-assignment
+    body: bodyProp = $bindable(),
+    id = undefined,
+    collisionFilterGroup = 1,
+    collisionFilterMask = -1,
+    collisionResponse = true,
+    position = $bindable(),
+    velocity = $bindable(),
+    mass = 0,
+    material = null,
+    linearDamping = 0.01,
+    type = mass <= 0.0 ? Body.STATIC : Body.DYNAMIC,
+    allowSleep = true,
+    sleepSpeedLimit = 0.1,
+    sleepTimeLimit = 1,
+    rotation = $bindable(), // Euler
+    quaternion = undefined,
+    angularVelocity = undefined,
+    fixedRotation = false,
+    angularDamping = 0.01,
+    linearFactor = undefined,
+    angularFactor = undefined,
+    isTrigger = false,
+    sleepState = undefined,
+    children = undefined,
+    onwakeup = undefined,
+    onsleepy = undefined,
+    onsleep = undefined,
+    oncollide = undefined,
+  }: Props = $props();
 
-  export const body = new Body({
-    collisionFilterGroup,
-    collisionFilterMask,
-    collisionResponse,
-    position: toVec3(position),
-    mass,
-    velocity: toVec3(velocity),
-    material: material ?? undefined,
-    linearDamping,
-    type,
-    allowSleep,
-    sleepSpeedLimit,
-    sleepTimeLimit,
-    quaternion: toQuaternion(rotation ?? quaternion),
-    angularVelocity: toVec3(angularVelocity),
-    fixedRotation,
-    angularDamping,
-    linearFactor: toVec3(linearFactor),
-    angularFactor: toVec3(angularFactor),
-    isTrigger,
-  });
+  const body = untrack(
+    () =>
+      new Body({
+        collisionFilterGroup,
+        collisionFilterMask,
+        collisionResponse,
+        position: toVec3(position),
+        mass,
+        velocity: toVec3(velocity),
+        material: material ?? undefined,
+        linearDamping,
+        type,
+        allowSleep,
+        sleepSpeedLimit,
+        sleepTimeLimit,
+        quaternion: toQuaternion(rotation ?? quaternion),
+        angularVelocity: toVec3(angularVelocity),
+        fixedRotation,
+        angularDamping,
+        linearFactor: toVec3(linearFactor),
+        angularFactor: toVec3(angularFactor),
+        isTrigger,
+      }),
+  );
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-useless-assignment
+  bodyProp = body;
 
   const context = getCannonContext();
   setCannonContext({ ...context, body });
 
-  $: syncId(context, body, id);
-  $: body.collisionFilterGroup = collisionFilterGroup;
-  $: body.collisionFilterMask = collisionFilterMask;
-  $: body.collisionResponse = collisionResponse;
-  $: syncVec3(body.position, position);
-  $: syncVec3(body.velocity, velocity);
-  $: body.material = material;
-  $: body.mass = mass;
-  $: body.linearDamping = linearDamping;
-  $: {
+  $effect(() => {
+    syncId(context, body, id);
+  });
+
+  $effect.pre(() => {
+    if (position instanceof Vec3State) {
+      position._toPhysics(body.position);
+    } else {
+      syncVec3(body.position, position);
+    }
+  });
+  $effect(() => {
+    if (velocity instanceof Vec3State) {
+      velocity._toPhysics(body.velocity);
+    } else {
+      syncVec3(body.velocity, velocity);
+    }
+  });
+  $effect(() => {
+    body.collisionFilterGroup = collisionFilterGroup;
+    body.collisionFilterMask = collisionFilterMask;
+    body.collisionResponse = collisionResponse;
+  });
+  $effect(() => {
+    body.material = material;
+  });
+  $effect(() => {
+    body.mass = mass;
+    body.linearDamping = linearDamping;
+  });
+  $effect(() => {
     if (type) {
       body.type = type;
     }
-  }
-  $: body.allowSleep = allowSleep;
-  $: body.sleepSpeedLimit = sleepSpeedLimit;
-  $: body.sleepTimeLimit = sleepTimeLimit;
+  });
+  $effect(() => {
+    body.allowSleep = allowSleep;
+    body.sleepSpeedLimit = sleepSpeedLimit;
+    body.sleepTimeLimit = sleepTimeLimit;
+  });
   const skipRotationRef = { skip: false, euler: new Vec3() };
-  $: syncQuaternion(body.quaternion, rotation, skipRotationRef);
-  $: syncQuaternion(body.quaternion, quaternion);
-  $: syncVec3(body.angularVelocity, angularVelocity);
-  $: body.fixedRotation = fixedRotation;
-  $: body.angularDamping = angularDamping;
-  $: syncVec3(body.linearFactor, linearFactor);
-  $: syncVec3(body.angularFactor, angularFactor);
-  $: body.isTrigger = isTrigger;
-  $: if (sleepState !== undefined && sleepState !== body.sleepState) {
-    if (sleepState === Body.AWAKE) {
-      body.wakeUp();
+  $effect(() => {
+    if (rotation instanceof Vec3State) {
+      rotation._toPhysics({
+        set: (x, y, z) => body.quaternion.setFromEuler(x, y, z, "XYZ"),
+      });
+    } else {
+      syncQuaternion(body.quaternion, rotation, skipRotationRef);
     }
-    if (sleepState === Body.SLEEPING) {
-      body.sleep();
+  });
+  $effect(() => {
+    syncQuaternion(body.quaternion, quaternion);
+  });
+  $effect(() => {
+    syncVec3(body.angularVelocity, angularVelocity);
+  });
+  $effect(() => {
+    body.fixedRotation = fixedRotation;
+  });
+  $effect(() => {
+    body.angularDamping = angularDamping;
+  });
+  $effect(() => {
+    syncVec3(body.linearFactor, linearFactor);
+  });
+  $effect(() => {
+    syncVec3(body.angularFactor, angularFactor);
+  });
+  $effect(() => {
+    body.isTrigger = isTrigger;
+  });
+  $effect(() => {
+    if (sleepState !== undefined && sleepState !== body.sleepState) {
+      if (sleepState === Body.AWAKE) {
+        body.wakeUp();
+      }
+      if (sleepState === Body.SLEEPING) {
+        body.sleep();
+      }
     }
-  }
+  });
 
-  forwardEvents(body, "wakeup", "sleepy", "sleep", "collide");
+  $effect(() => listenTo(body, "wakeup", onwakeup));
+  $effect(() => listenTo(body, "sleepy", onsleepy));
+  $effect(() => listenTo(body, "sleep", onsleep));
+  $effect(() => listenTo(body, "collide", oncollide));
+
   function sync() {
     if (position instanceof Vec3State) {
-      position.syncWrite(body.position);
+      position._fromPhysics(body.position);
     } else if (position instanceof Vec3) {
       position = body.position;
     }
     if (velocity instanceof Vec3State) {
-      velocity.syncWrite(body.velocity);
+      velocity._fromPhysics(body.velocity);
     } else if (velocity instanceof Vec3) {
       velocity = body.velocity;
     }
@@ -112,35 +209,18 @@
     } else if (rotation instanceof Vec3State) {
       quaternionToEuler(body.quaternion, skipRotationRef.euler);
       skipRotationRef.skip = true;
-      rotation.syncWrite(skipRotationRef.euler);
+      rotation._fromPhysics(skipRotationRef.euler);
     } else if (rotation instanceof Vec3) {
       quaternionToEuler(body.quaternion, skipRotationRef.euler);
       skipRotationRef.skip = true;
       rotation = skipRotationRef.euler;
     }
     if (angularVelocity instanceof Vec3State) {
-      angularVelocity.syncWrite(body.angularVelocity);
+      angularVelocity._fromPhysics(body.angularVelocity);
     } else if (angularVelocity instanceof Vec3) {
       angularVelocity = body.angularVelocity;
     }
   }
-  onMount(() => {
-    if (position instanceof Vec3State) {
-      return position.syncRead((x, y, z) => body.position.set(x, y, z));
-    }
-  });
-  onMount(() => {
-    if (velocity instanceof Vec3State) {
-      return velocity.syncRead((x, y, z) => body.velocity.set(x, y, z));
-    }
-  });
-  onMount(() => {
-    if (rotation instanceof Vec3State) {
-      return rotation.syncRead((x, y, z) =>
-        body.quaternion.setFromEuler(x, y, z, "XYZ"),
-      );
-    }
-  });
 
   onMount(() => {
     context.world.addBody(body);
@@ -152,8 +232,8 @@
       if (id) {
         context.bodyToId.delete(body);
         context.idToBody.update(($idToBody) => {
-          if ($idToBody[id!] === body) {
-            delete $idToBody[id!];
+          if ($idToBody[id] === body) {
+            delete $idToBody[id];
           }
           return $idToBody;
         });
@@ -171,4 +251,4 @@
   });
 </script>
 
-<slot />
+{@render children?.()}

@@ -11,13 +11,13 @@
 
   let hit = $state(false);
 
-  function onHit() {
+  function oncollide() {
     hit = true;
   }
 </script>
 
 {#if hit === false}
-  <PE.Body on:collide={onHit} position={[-x, -y, -0.1]} isTrigger>
+  <PE.Body {oncollide} position={[-x, -y, -0.1]} isTrigger>
     <PE.Sphere radius={0.1} />
   </PE.Body>
   <SC.Mesh

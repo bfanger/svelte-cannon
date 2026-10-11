@@ -26,7 +26,7 @@
   });
 </script>
 
-<PE.Body position={[-x, -y, -0.4]} isTrigger on:collide={oncollide}>
+<PE.Body position={[-x, -y, -0.4]} isTrigger {oncollide}>
   <PE.Sphere radius={size.current} />
 </PE.Body>
 <SC.Mesh

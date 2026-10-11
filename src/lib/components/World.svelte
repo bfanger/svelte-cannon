@@ -1,45 +1,67 @@
 <script lang="ts">
   import { World } from "cannon-es";
-  import type { Broadphase, Solver } from "cannon-es";
-  import { createEventDispatcher, onMount, setContext } from "svelte";
+  import type { Body, Broadphase, Solver } from "cannon-es";
+  import { onMount, setContext, untrack } from "svelte";
   import { writable } from "svelte/store";
   import { setCannonContext } from "../context-fns";
-  import { forwardEvents } from "../lifecycle-fns";
+  import { listenTo } from "../lifecycle-fns";
   import { toVec3 } from "../conversion-fns";
   import { syncVec3 } from "../sync-fns";
   import type { Vec3Like } from "../types";
+  import type { Snippet } from "svelte";
 
-  export let gravity: Vec3Like | undefined = undefined;
-  export let allowSleep = false;
-  export let broadphase: Broadphase | undefined = undefined;
-  export let solver: Solver | undefined = undefined;
-  export let quatNormalizeFast = false;
-  export let quatNormalizeSkip = 0;
+  type Props = {
+    gravity?: Vec3Like;
+    allowSleep?: boolean;
+    broadphase?: Broadphase;
+    solver?: Solver;
+    quatNormalizeFast?: boolean;
+    quatNormalizeSkip?: number;
+    preStep?: () => void;
+    postStep?: () => void;
+    bodyAdded?: (event: { body: Body | null }) => void;
+    bodyRemoved?: (event: { body: Body | null }) => void;
+    children?: Snippet;
+  };
+  let {
+    gravity = undefined,
+    allowSleep = false,
+    broadphase = undefined,
+    solver = undefined,
+    quatNormalizeFast = false,
+    quatNormalizeSkip = 0,
+    preStep = undefined,
+    postStep = undefined,
+    bodyAdded: addBody = undefined,
+    bodyRemoved: removeBody = undefined,
+    children = undefined,
+  }: Props = $props();
 
-  export const world = new World({
-    gravity: toVec3(gravity),
-    allowSleep,
-    broadphase,
-    solver,
-    quatNormalizeFast,
-    quatNormalizeSkip,
+  export const world = untrack(
+    () =>
+      new World({
+        gravity: toVec3(gravity),
+        allowSleep,
+        broadphase,
+        solver,
+        quatNormalizeFast,
+        quatNormalizeSkip,
+      }),
+  );
+  $effect(() => {
+    syncVec3(world.gravity, gravity);
   });
-  const dispatch = createEventDispatcher();
-
-  $: syncVec3(world.gravity, gravity);
-  $: world.allowSleep = allowSleep;
-  $: {
+  $effect(() => {
+    world.allowSleep = allowSleep;
     if (broadphase) {
       world.broadphase = broadphase;
     }
-  }
-  $: {
     if (solver) {
       world.solver = solver;
     }
-  }
-  $: world.quatNormalizeFast = quatNormalizeFast;
-  $: world.quatNormalizeSkip = quatNormalizeSkip;
+    world.quatNormalizeFast = quatNormalizeFast;
+    world.quatNormalizeSkip = quatNormalizeSkip;
+  });
 
   setCannonContext({
     world,
@@ -48,7 +70,12 @@
   });
   setContext("cannon/world", world);
 
-  forwardEvents(world, "addBody", "removeBody");
+  $effect(() => {
+    return listenTo(world, "addBody", addBody);
+  });
+  $effect(() => {
+    return listenTo(world, "removeBody", removeBody);
+  });
 
   onMount(() => {
     const timeStep = 1 / 60;
@@ -56,14 +83,14 @@
     let prev: number;
     function listener() {
       const now = performance.now();
-      dispatch("preStep");
+      preStep?.();
       if (!prev) {
         world.step(timeStep);
       } else {
         const dt = (now - prev) / 1000;
         world.step(timeStep, dt);
       }
-      dispatch("postStep");
+      postStep?.();
       prev = now;
       raf = requestAnimationFrame(listener);
     }
@@ -75,4 +102,4 @@
   });
 </script>
 
-<slot />
+{@render children?.()}

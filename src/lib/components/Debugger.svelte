@@ -1,36 +1,54 @@
 <script lang="ts">
-  import { createEventDispatcher, onDestroy } from "svelte";
   import CannonDebugger from "cannon-es-debugger";
-  import type { Color, Scene } from "three";
+  import type { Body, Shape } from "cannon-es";
+  import type { Color, Mesh, Scene } from "three";
   import { getCannonContext } from "../context-fns";
 
-  export let scene: Scene;
-  export let color: string | number | Color = 0x00ff00;
-  export let scale = 1;
+  type DebugEvent = {
+    body: Body;
+    mesh: Mesh;
+    shape: Shape;
+  };
 
-  const dispatch = createEventDispatcher();
+  type Props = {
+    scene: Scene;
+    color?: string | number | Color;
+    scale?: number;
+    init?: (event: DebugEvent) => void;
+    update?: (event: DebugEvent) => void;
+  };
+  let {
+    scene,
+    color = 0x00ff00,
+    scale = 1,
+    init = undefined,
+    update = undefined,
+  }: Props = $props();
 
-  const { world } = getCannonContext();
-  let update: () => void;
-  $: {
-    if (update) {
-      world.removeEventListener("postStep", update);
+  const ctx = getCannonContext();
+
+  let listener: (() => void) | undefined;
+  $effect(() => {
+    if (listener) {
+      ctx.world.removeEventListener("postStep", listener);
     }
     if (scene) {
-      update = CannonDebugger(scene, world, {
+      listener = CannonDebugger(scene, ctx.world, {
         color,
         scale,
         onInit(body, mesh, shape) {
-          dispatch("init", { body, mesh, shape });
+          init?.({ body, mesh, shape });
         },
         onUpdate(body, mesh, shape) {
-          dispatch("update", { body, mesh, shape });
+          update?.({ body, mesh, shape });
         },
       }).update;
-      world.addEventListener("postStep", update);
+      ctx.world.addEventListener("postStep", listener);
     }
-  }
-  onDestroy(() => {
-    world.removeEventListener("postStep", update);
+    return () => {
+      if (listener) {
+        ctx.world.removeEventListener("postStep", listener);
+      }
+    };
   });
 </script>

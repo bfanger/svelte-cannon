@@ -22,6 +22,21 @@ export function onPostStep(listener: () => void) {
 }
 
 /**
+ * Attach a possible event listener and return a teardown function.
+ */
+export function listenTo(
+  target: EventTarget,
+  event: string,
+  handler?: (event: any) => void,
+) {
+  if (!handler) {
+    return undefined;
+  }
+  target.addEventListener(event, handler);
+  return () => target.removeEventListener(event, handler);
+}
+
+/**
  * Forward events from Cannon to Svelte
  */
 export function forwardEvents(target: EventTarget, ...events: string[]) {

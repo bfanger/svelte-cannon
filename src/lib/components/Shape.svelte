@@ -1,15 +1,25 @@
 <script lang="ts">
   import type { Shape, Body, Material } from "cannon-es";
-  import { onDestroy } from "svelte";
-  import { writable } from "svelte/store";
+  import { onMount } from "svelte";
+  import type { Snippet } from "svelte";
   import { getCannonContext, setCannonContext } from "../context-fns";
   import { toVec3, toQuaternion } from "../conversion-fns";
   import type { Vec3Like, QuaternionLike } from "../types";
 
-  export let shape: Shape;
-  export let offset: Vec3Like | undefined = undefined;
-  export let orientation: QuaternionLike | undefined = undefined;
-  export let material: Material | undefined = undefined;
+  type Props = {
+    shape: Shape;
+    offset?: Vec3Like;
+    orientation?: QuaternionLike;
+    material?: Material;
+    children?: Snippet;
+  };
+  let {
+    shape,
+    offset = undefined,
+    orientation = undefined,
+    material = undefined,
+    children = undefined,
+  }: Props = $props();
 
   const context = getCannonContext();
 
@@ -17,11 +27,15 @@
   if (!body) {
     throw new Error("Missing body, shape not nested inside <Body>");
   }
-  const store = writable(shape);
-  setCannonContext({ ...context, shape: store });
-  $: syncMaterial(material);
-  $: sync(shape, offset, orientation);
-  $: store.set(shape);
+  setCannonContext({
+    ...context,
+    get shape() {
+      return shape;
+    },
+  });
+  $effect(() => {
+    syncMaterial(material);
+  });
 
   let prevMaterial: Material | undefined;
   function syncMaterial(_material: Material | undefined) {
@@ -32,21 +46,19 @@
   }
 
   let prevShape: Shape | undefined;
-  function sync(
-    _shape: Shape,
-    _offset?: Vec3Like,
-    _orientation?: QuaternionLike,
-  ) {
+  $effect(() => {
     if (prevShape) {
       body.removeShape(prevShape);
     }
-    body.addShape(_shape, toVec3(_offset), toQuaternion(_orientation));
-    prevShape = _shape;
-  }
+    body.addShape(shape, toVec3(offset), toQuaternion(orientation));
+    prevShape = shape;
+  });
 
-  onDestroy(() => {
-    body.removeShape(shape);
+  onMount(() => {
+    return () => {
+      body.removeShape(shape);
+    };
   });
 </script>
 
-<slot />
+{@render children?.()}

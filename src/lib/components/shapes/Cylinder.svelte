@@ -1,20 +1,36 @@
 <script lang="ts">
   import { Cylinder } from "cannon-es";
   import type { Material } from "cannon-es";
+  import type { Snippet } from "svelte";
   import type { Vec3Like, QuaternionLike } from "../../types";
   import Shape from "../Shape.svelte";
 
-  export let radiusTop = 1;
-  export let radiusBottom = 1;
-  export let height = 1;
-  export let numSegments = 8;
-  export let offset: Vec3Like | undefined = undefined;
-  export let orientation: QuaternionLike | undefined = undefined;
-  export let material: Material | undefined = undefined;
+  type Props = {
+    radiusTop?: number;
+    radiusBottom?: number;
+    height?: number;
+    numSegments?: number;
+    offset?: Vec3Like;
+    orientation?: QuaternionLike;
+    material?: Material;
+    children?: Snippet;
+  };
+  let {
+    radiusTop = 1,
+    radiusBottom = 1,
+    height = 1,
+    numSegments = 8,
+    offset = undefined,
+    orientation = undefined,
+    material = undefined,
+    children = undefined,
+  }: Props = $props();
 
-  $: shape = new Cylinder(radiusTop, radiusBottom, height, numSegments);
+  const shape = $derived.by(
+    () => new Cylinder(radiusTop, radiusBottom, height, numSegments),
+  );
 </script>
 
 <Shape {shape} {offset} {orientation} {material}>
-  <slot />
+  {@render children?.()}
 </Shape>

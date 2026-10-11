@@ -1,38 +1,43 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  import { get } from "svelte/store";
+  import { untrack } from "svelte";
   import { Material } from "cannon-es";
   import { getCannonContext } from "../context-fns";
 
-  export let friction = -1;
-  export let restitution = -1;
+  type Props = {
+    material?: Material;
+    friction?: number;
+    restitution?: number;
+  };
+  let {
+    material = $bindable(),
+    friction = -1,
+    restitution = -1,
+  }: Props = $props();
 
-  export const material = new Material({ friction, restitution });
+  material ??= untrack(() => new Material({ friction, restitution }));
 
-  $: material.friction = friction;
-  $: material.restitution = restitution;
+  $effect(() => {
+    material.friction = friction;
+    material.restitution = restitution;
+  });
 
-  const { body, shape } = getCannonContext();
+  const ctx = getCannonContext();
+  const body = ctx.body;
   if (!body) {
     throw new Error("Missing body, material not nested inside <Body>");
   }
 
-  if (shape) {
-    onMount(() => {
-      shape.subscribe(($shape) => {
-        $shape.material = material;
-      });
+  $effect(() => {
+    const shape = ctx.shape;
+    if (shape) {
+      shape.material = material;
       return () => {
-        const $shape = get(shape);
-        $shape.material = null;
+        shape.material = null;
       };
-    });
-  } else {
-    onMount(() => {
-      body.material = material;
-      return () => {
-        body.material = null;
-      };
-    });
-  }
+    }
+    body.material = material;
+    return () => {
+      body.material = null;
+    };
+  });
 </script>

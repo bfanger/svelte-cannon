@@ -11,7 +11,7 @@
   let jointPosition = $state(new CANNON.Vec3(1, -0.5, 0));
   let penPosition = $state(new CANNON.Vec3(1, -1.5, 0));
   let magnet = $state<false | { x: number; y: number }>(false);
-  let onPostStep = $state(() => undefined);
+  let postStep = $state(() => undefined);
 
   let trailsCanvas: HTMLCanvasElement;
   let sticksCanvas: HTMLCanvasElement;
@@ -32,7 +32,7 @@
 
     const start = Date.now();
     const previous = penPosition.clone();
-    onPostStep = () => {
+    postStep = () => {
       if (!ctx) {
         return;
       }
@@ -146,7 +146,7 @@
   ontouchmove={onMove}
   ontouchend={onUp}
 ></canvas>
-<PE.World gravity={[0, 9.81, 0]} on:postStep={onPostStep}>
+<PE.World gravity={[0, 9.81, 0]} {postStep}>
   <PE.DistanceConstraint for={["anchor", "joint", "pen"]} distance={1} />
   <PE.Body id="anchor" mass={0} position={[0, -0.5, 0]} />
   <PE.Body id="joint" mass={1} {linearDamping} bind:position={jointPosition}>

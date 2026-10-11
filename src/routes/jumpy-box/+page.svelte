@@ -14,7 +14,7 @@
   let color = $state(0xbababa);
   let visible = $state(false);
 
-  function onClick() {
+  function onclick() {
     visible = true;
     ballPosition.set(0.55, 3, 0);
     ballVelocity.set(0, 0, 0);
@@ -61,9 +61,9 @@
       position={boxPosition}
       rotation={boxRotation}
       velocity={[0, boxVelocityY, 0]}
-      on:collide={onCollide}
-      on:sleep={onSleep}
-      on:wakeup={onWakeUp}
+      oncollide={onCollide}
+      onsleep={onSleep}
+      onwakeup={onWakeUp}
     >
       <PE.Box size={[0.5, 0.5, 0.5]} />
     </PE.Body>
@@ -113,4 +113,4 @@
     But made something else because of missing interaction options: https://github.com/Rich-Harris/svelte-cubed/issues/5"
   />
 </svelte:head>
-<svelte:body on:click={onClick} />
+<svelte:body {onclick} />

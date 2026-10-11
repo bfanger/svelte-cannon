@@ -1,27 +1,37 @@
 <script lang="ts">
   import { Box } from "cannon-es";
   import type { Material } from "cannon-es";
+  import { untrack } from "svelte";
+  import type { Snippet } from "svelte";
   import { toVec3 } from "../../conversion-fns";
   import { syncVec3 } from "../../sync-fns";
   import type { Vec3Like, QuaternionLike } from "../../types";
   import Shape from "../Shape.svelte";
 
-  export let size: Vec3Like;
-  export let offset: Vec3Like | undefined = undefined;
-  export let orientation: QuaternionLike | undefined = undefined;
-  export let material: Material | undefined = undefined;
+  type Props = {
+    size: Vec3Like;
+    offset?: Vec3Like;
+    orientation?: QuaternionLike;
+    material?: Material;
+    children?: Snippet;
+  };
+  let {
+    size,
+    offset = undefined,
+    orientation = undefined,
+    material = undefined,
+    children = undefined,
+  }: Props = $props();
 
-  const shape = new Box(toVec3(size));
+  const shape = untrack(() => new Box(toVec3(size)));
 
-  $: sync(size);
-
-  function sync(options: Vec3Like) {
-    syncVec3(shape.halfExtents, options);
+  $effect(() => {
+    syncVec3(shape.halfExtents, size);
     shape.updateConvexPolyhedronRepresentation();
     shape.updateBoundingSphereRadius();
-  }
+  });
 </script>
 
 <Shape {shape} {offset} {orientation} {material}>
-  <slot />
+  {@render children?.()}
 </Shape>
