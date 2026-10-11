@@ -21,7 +21,7 @@
     [8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
   ];
   const groundRotation: [number, number, number] = [-Math.PI, 0, 0];
-  let weak = false;
+  let weak = $state(false);
   function onPowerUp() {
     weak = true;
   }

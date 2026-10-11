@@ -1,5 +1,7 @@
 <script lang="ts">
   import { resolve } from "$app/paths";
+
+  let { children } = $props();
 </script>
 
 <svelte:head>
@@ -10,7 +12,7 @@
   <h1><a href={resolve("/")}>💣 svelte-cannon</a></h1>
 </header>
 <main>
-  <slot />
+  {@render children()}
 </main>
 
 <style>
